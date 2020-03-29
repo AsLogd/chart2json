@@ -1,0 +1,42 @@
+{
+  "name": "chart2json",
+  "version": "1.0.0",
+  "description": ".chart => .json",
+  "main": "lib/index.js",
+  "files": [
+    "bin/",
+    "lib/"
+  ],
+  "scripts": {
+    "clean": "rm -Rf ./lib",
+    "prebuild": "run-s clean",
+    "build": "run-s build:*",
+    "build:lib": "mkdir lib",
+    "build:grammar": "nearleyc chart.ne -o lib/chart.js",
+    "build:ts": "tsc",
+    "pretest": "run-s build",
+    "test": "node tests/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AsLogd/chart2json.git"
+  },
+  "keywords": [
+    "chart",
+    "json",
+    "guitar"
+  ],
+  "author": "aslogd",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AsLogd/chart2json/issues"
+  },
+  "homepage": "https://github.com/AsLogd/chart2json#readme",
+  "devDependencies": {
+    "@types/nearley": "^2.11.1",
+    "glob": "^7.1.6",
+    "nearley": "^2.19.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^3.8.3"
+  }
+}

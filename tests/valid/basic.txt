@@ -1,0 +1,4 @@
+[Song]
+{
+  Resolution = 192
+}
