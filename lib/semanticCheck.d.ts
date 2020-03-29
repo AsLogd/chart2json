@@ -11,5 +11,5 @@ interface IAtom {
     type: "number" | "string" | "id";
     value: string | number;
 }
-export default function semanticCheck([chart]: [TChart], location: number, reject: Object): Object;
+export default function semanticCheck([chart]: [TChart], location: number, reject: Object): TChart;
 export {};

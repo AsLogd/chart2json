@@ -1,42 +1,4 @@
 [Song]
 {
-  Name = "Dungeon"
-  Artist = "Soul Knight"
-  Charter = "HattMeafy"
-  Album = "Soul Knight OST"
-  Year = ", 2017"
-  Offset = 0
   Resolution = 192
-  Player2 = bass
-  Difficulty = 6
-  PreviewStart = 0
-  PreviewEnd = 0
-  Genre = "Electronic Rock"
-  MediaType = "cd"
-  MusicStream = "song.ogg"
-  GuitarStream = "lead keyboard.ogg"
-  RhythmStream = "rhythm guitar.ogg"
-}
-[SyncTrack]
-{
-  0 = TS 6
-  0 = B 130000
-  1152 = TS 4
-}
-[Events]
-{
-  1152 = E "section Intro Riffing"
-  8064 = E "section A bit of Bleep Bloop"
-  14208 = E "section Marching Through the Dungeon A"
-  17280 = E "section Marching Through the Dungeon B"
-  20352 = E "section EXTREME Bleep Bloop"
-  23424 = E "section Catching the Breath"
-  26496 = E "section Even more Bleeps"
-  29568 = E "section Another Break"
-  35712 = E "section Outro"
-}
-[ExpertSingle]
-{
-  1152 = N 4 0
-  1152 = N 6 0
 }

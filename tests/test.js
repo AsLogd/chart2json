@@ -24,17 +24,18 @@ fs.readdirSync(validFolder).forEach(file => {
 	try {
 		parser.feed(data);
 	} catch (err) {
+		Log.error(" - "+testName+"- KO")
+		Log.info("The parser gave the following error:")
 		Log.error(err);
-		dumpTest(path, data, parser.results)
 	}
 
 	if (parser.results.length === 1) {
-		Log.ok(testName+" - OK")
+		Log.ok(" - "+testName+" - OK")
 	} else if(parser.results.length > 1){
-		Log.warn(testName+" - Ambiguous!")
+		Log.warn(" - "+testName+" - Ambiguous!")
 		dumpTest(path, data, parser.results)
 	} else {
-		Log.error(testName+" - KO")
+		Log.error(" - "+testName+" - KO")
 		dumpTest(path, data, parser.results)
 	}
 });
@@ -48,14 +49,14 @@ fs.readdirSync(invalidFolder).forEach(file => {
 	try {
 		parser.feed(data);
 	} catch (err) {
-		Log.error(err);
-		dumpTest(path, data, parser.results)
+		Log.ok(" - "+testName+" - OK")
+		return
 	}
 
-	if (parser.results.length === 0) {
-		Log.ok(testName+" - OK")
+	if (parser.results && parser.results.length === 0) {
+		Log.ok(" - "+testName+" - OK")
 	} else {
-		Log.error(testName+" - KO")
+		Log.error(" - "+testName+" - KO")
 		dumpTest(path, data, parser.results)
 	}
 });

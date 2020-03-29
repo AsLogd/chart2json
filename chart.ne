@@ -1,11 +1,10 @@
 @{%
 
-	// TODO: Memory fails maybe because ambiguity of whitespace?
 const semanticCheck = require("./semanticCheck").default
 const moo = require('moo')
 
 let lexer = moo.compile({
-	nl: 		{match: /[\n\r]/, lineBreaks: true},
+	nl: 		{match: /[\n\r]+/, lineBreaks: true},
 	ws: 		/[ \t]+/,
 	string: 	/"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,
 	id: 		/[a-zA-Z][a-zA-Z0-9]*/,
@@ -16,31 +15,33 @@ let lexer = moo.compile({
 	']': 		']',
 	'=': 		'=',
 })
-const empty 		= ()		=> null
-const getVal		= ([x])		=> x.value
-const getStr		= ([str]) 	=> str.value.substr(1, str.value.length- 2)
-const getNum 		= ([num]) 	=> Number(num.value)
-const mapWithSep 	= ([list])	=> list.map(a => a[1])
-const catWithRest 	= ([i, r])	=> [i, ...(r||[])]
+const getSection 	= ([title, _, content]) => ({title, content})
+const removeFirst   = ([_, a]) 				=> a
+const getItem 		= ([_, key, __, value])	=> ({key, value})
+const catWithRest 	= ([i, r])				=> [i, ...(r||[])]
+const empty 		= ()					=> null
 %}
 
 @lexer lexer
 
-chart 		-> section:+					{% semanticCheck %}
-section 	-> _ title _ content _			{% ([_, title, __, content]) => ({title, content}) %}
-title		-> "[" %id "]"					{% ([_, title]) => title.value %}
-content 	-> "{" _ item_list:? _ "}"		{% ([_, __, items]) => items %}
-item_list	-> item item_rest:?				{% catWithRest %}
-item_rest	-> (newline item):+				{% mapWithSep %}
-item		-> key (_ "=" _) value			{% ([key, _, value]) => ({key, value}) %}
-value		-> atom atom_rest:?				{% catWithRest %}
-atom_rest	-> (%ws atom):+					{% mapWithSep %}
+chart 		-> section:+			 		{% semanticCheck %}
+section 	-> title %nl content %nl 		{% getSection %}
+title		-> "[" %id "]"					{% removeFirst %}
+content 	-> ("{" %nl) item_list "}"		{% removeFirst %}
+item_list	-> item:+						{% id %}
+item		-> __ key eq value item_end 	{% getItem %}
+item_end 	-> _ %nl 						{% empty %}
+eq 			-> __ "=" __ 					{% empty %}
+value		-> atom value_rest:*			{% catWithRest %}
+value_rest	-> __ atom 						{% removeFirst %}
+
 atom ->
 	  %number								{% id %}
 	| %id									{% id %}
 	| %string								{% id %}
 key	->
-	  %id									{% getVal %}
-	| %number								{% getVal %}
-newline		-> _ %nl _						{% empty %}
-_			-> (%nl | %ws):*				{% empty %}
+	  %id									{% id %}
+	| %number								{% id %}
+
+__ 			-> %ws 							{% empty %}
+_  			-> %ws:?						{% empty %}

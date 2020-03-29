@@ -27,9 +27,12 @@ enum ESongKeys {
 }
 
 export default function semanticCheck([chart]: [TChart], location:number, reject: Object) {
-	//console.log("performing semantic check")
+	//TODO: implement semantic check
+	console.log("performing semantic check")
 	//console.log("Is valid chart:", isValidChart(chart))
-	return isValidChart(chart) ? chart : reject
+	//console.log(chart)
+	return chart
+	//return isValidChart(chart) ? chart : reject
 }
 
 function isValidChart(secs: ISection[]) {

@@ -15,7 +15,9 @@
     "build:grammar": "nearleyc chart.ne -o lib/chart.js",
     "build:ts": "tsc",
     "pretest": "run-s build",
-    "test": "node tests/test.js"
+    "test": "node tests/test.js",
+    "pretest-grammar": "run-s build",
+    "test-grammar": "npx nearley-test lib/chart.js"
   },
   "repository": {
     "type": "git",
