@@ -1,53 +1,61 @@
-type TChart = ISection[]
+import {
+	EError,
+	IError,
+	getErrorString
+} from "./Error"
 
-interface ISection {
-	title: string
-	content: IItem[]
+import {
+	TChart,
+	ISection,
+	IItem,
+	IAtom,
+	ESection,
+	TKey,
+	ETypeKind,
+	ISongTypes,
+	ESongKey,
+	SongTypes,
+	FString,
+	FNumber,
+	FLiteral,
+	typeFromRawValue,
+	ILiteralType
+} from "./Meta"
+
+/*
+ * Performs a semantic check on a syntactically correct chart file
+ */
+export default function semanticCheck(chart: TChart): null | IError {
+	return isValidChart(chart)
 }
 
-interface IItem {
-	key: string
-	value: IAtom[]
+/*
+ * Returns null if the chart is valid. Otherwise returns an error
+ */
+function isValidChart(secs: ISection[]): null | IError {
+	if (!containsSectionOnce(secs, ESection.SONG)) {
+		return {
+			reason: getErrorString(EError.MISSING_SECTION, {
+				section: ESection.SONG
+			})
+		}
+	}
+
+	const songSection = getSection(secs, ESection.SONG)
+	const songSectionError = checkSongTypes(SongTypes, songSection.content)
+	if (songSectionError) {
+		return songSectionError
+	}
+
+	return null
+
 }
 
-interface IAtom {
-	type: "number" | "string" | "id"
-	value: string | number
-	//TODO: other values
-}
-
-enum ESection {
-	SONG 		= "Song",
-	SYNC_TRACK 	= "SyncTrack",
-	EVENTS		= "Events"
-}
-
-enum ESongKeys {
-	RESOLUTION 	= "Resolution"
-}
-
-export default function semanticCheck([chart]: [TChart], location:number, reject: Object) {
-	//TODO: implement semantic check
-	console.log("performing semantic check")
-	//console.log("Is valid chart:", isValidChart(chart))
-	//console.log(chart)
-	return chart
-	//return isValidChart(chart) ? chart : reject
-}
-
-function isValidChart(secs: ISection[]) {
-	//console.log("Contains song once:", containsSectionOnce(secs, ESection.SONG))
-	//console.log("Valid song section:", isValidSongSection( getSection(secs, ESection.SONG) ))
-	return(
-			secs && Array.isArray(secs)
-		&&	containsSectionOnce(secs, ESection.SONG)
-		&&	isValidSongSection( getSection(secs, ESection.SONG) )
-	)
-}
-
+/*
+ * Gets the specified section
+ * @pre The section should exist
+ */
 function getSection(sections: ISection[], sectionName: ESection): ISection {
-	//console.log("get section: ", sections.find(x => x.title === sectionName))
-	// We know it contains section
 	return sections.find(x => x.title === sectionName) as ISection
 }
 
@@ -56,12 +64,129 @@ function containsSectionOnce(sections: ISection[], sectionName: ESection) {
 	return sections.filter(x => x.title === sectionName).length === 1
 }
 
-function isValidSongSection({title, content}: ISection) {
-	return (
-		// Resolution is mandatory
-			content && Array.isArray(content)
-		&& 	content.filter(x => x.key === ESongKeys.RESOLUTION).length === 1
+function checkSongTypes(types: ISongTypes, content: IItem[]): null | IError {
+	const {
+		required= [],
+		string 	= [],
+		number 	= [],
+		literal = []
+	} = types
+
+	const requiredError = checkSongRequiredItems(required, content)
+	if (requiredError) {
+		return requiredError
+	}
+	const songStringError = checkSongStringItems(string, content)
+	if (songStringError) {
+		return songStringError
+	}
+	const songNumberError = checkSongNumberItems(number, content)
+	if (songNumberError) {
+		return songNumberError
+	}
+	const songLiteralError = checkSongLiteralItems(literal, content)
+	if (songLiteralError) {
+		return songLiteralError
+	}
+
+	return null
+}
+
+function checkSongRequiredItems(required: ESongKey[], content: IItem[]): null | IError {
+	for (const reqItem of required) {
+		const isFound = content.some(item =>
+			item.key === reqItem
+		)
+		if (!isFound) {
+			return {
+				reason: getErrorString(EError.MISSING_REQUIRED_ITEM, {
+					section: ESection.SONG,
+					item: reqItem
+				})
+			}
+		}
+	}
+	return null
+}
+
+function checkSongStringItems(keys: ESongKey[], content: IItem[]): null | IError {
+	const strItems = content.filter(item =>
+		keys.some(key => item.key === key)
 	)
+	const itemWithErr = strItems.find(item =>
+			item.values.length !== 1
+		|| 	item.values[0].type !== "string"
+	)
+
+	if (itemWithErr) {
+		return {
+			reason: getErrorString(EError.WRONG_TYPE, {
+				section: ESection.SONG,
+				item: itemWithErr.key,
+				expected: FString(),
+				found: typeFromRawValue(itemWithErr.values)
+			})
+		}
+	}
+
+	return null
+}
+
+function checkSongNumberItems(keys: ESongKey[], content: IItem[]): null | IError {
+	const numItems = content.filter(item =>
+		keys.some(key => item.key === key)
+	)
+	const itemWithErr = numItems.find(item =>
+			item.values.length !== 1
+		|| 	item.values[0].type !== "number"
+	)
+
+	if (itemWithErr) {
+		return {
+			reason: getErrorString(EError.WRONG_TYPE, {
+				section: ESection.SONG,
+				item: itemWithErr.key,
+				expected: FNumber(),
+				found: typeFromRawValue(itemWithErr.values)
+			})
+		}
+	}
+	return null
+}
+
+function checkSongLiteralItems(literalTuples: [ESongKey, ILiteralType][], content: IItem[]): null | IError {
+	let literalValues: string[] = []
+	const itemWithErr = content.find( item => {
+		// Corresponding tuple describing this literal
+		const tuple = literalTuples.find(tuple => tuple[0] === item.key)
+		if (!tuple) {
+			// If no tuple found, it's not a literal
+			return false
+		}
+
+		const hasOneValue = item.values.length === 1
+		// Literal should have one value
+		if(!hasOneValue) {
+			return true
+		}
+		literalValues = tuple[1].values
+		// Value is ok if it's equal to any of the defined literal values
+		const valueIsOk = literalValues.some(definedLiteral =>
+			definedLiteral === item.values[0].value
+		)
+		return !valueIsOk
+	} )
+	if (itemWithErr) {
+		return {
+			reason: getErrorString(EError.WRONG_TYPE, {
+				section: ESection.SONG,
+				item: itemWithErr.key,
+				expected: FLiteral(literalValues),
+				found: typeFromRawValue(itemWithErr.values)
+			})
+		}
+	}
+	return null
 }
 
 //tsc semanticCheck.ts --lib 'es2018','dom' --module 'commonjs'

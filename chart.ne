@@ -1,13 +1,11 @@
 @{%
-
-const semanticCheck = require("./semanticCheck").default
 const moo = require('moo')
 
 let lexer = moo.compile({
 	nl: 		{match: /[\n\r]+/, lineBreaks: true},
 	ws: 		/[ \t]+/,
 	string: 	/"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,
-	id: 		/[a-zA-Z][a-zA-Z0-9]*/,
+	literal: 		/[a-zA-Z][a-zA-Z0-9]*/,
 	number: 	/-?[0-9]+/,
 	'{': 		'{',
 	'}': 		'}',
@@ -15,18 +13,18 @@ let lexer = moo.compile({
 	']': 		']',
 	'=': 		'=',
 })
-const getSection 	= ([title, _, content]) => ({title, content})
+const getSection 	= ([title, _, content]) => ({title: title.value, content})
 const removeFirst   = ([_, a]) 				=> a
-const getItem 		= ([_, key, __, value])	=> ({key, value})
+const getItem 		= ([_, key, __, values])	=> ({key: key.value, values})
 const catWithRest 	= ([i, r])				=> [i, ...(r||[])]
 const empty 		= ()					=> null
 %}
 
 @lexer lexer
 
-chart 		-> section:+			 		{% semanticCheck %}
+chart 		-> section:+ 			 		{% id %}
 section 	-> title %nl content %nl 		{% getSection %}
-title		-> "[" %id "]"					{% removeFirst %}
+title		-> "[" %literal "]"				{% removeFirst %}
 content 	-> ("{" %nl) item_list "}"		{% removeFirst %}
 item_list	-> item:+						{% id %}
 item		-> __ key eq value item_end 	{% getItem %}
@@ -37,10 +35,10 @@ value_rest	-> __ atom 						{% removeFirst %}
 
 atom ->
 	  %number								{% id %}
-	| %id									{% id %}
+	| %literal								{% id %}
 	| %string								{% id %}
 key	->
-	  %id									{% id %}
+	  %literal								{% id %}
 	| %number								{% id %}
 
 __ 			-> %ws 							{% empty %}

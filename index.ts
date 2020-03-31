@@ -8,6 +8,8 @@ import {
 	Success
 } from "./failable"
 
+import check from "./semanticCheck"
+
 export interface Chart {
 	song: any
 }
@@ -30,6 +32,11 @@ export default class Parser {
 
 		if (parser.results.length < 1) {
 			return Failure({error: "Invalid Chart file"})
+		}
+
+		const semanticError = check(parser.results[0])
+		if (semanticError) {
+			return Failure({error: semanticError})
 		}
 
 		return Success(parser.results[0])

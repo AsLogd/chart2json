@@ -1,0 +1,53 @@
+[Song]
+{
+  Name = "At Doom's Gate"
+  Artist = "Mick Gordon"
+  Charter = "Shankocity"
+  Year = ", 2016"
+  Offset = 0
+  Resolution = 192
+  Player2 = basss
+  Difficulty = 6
+  PreviewStart = 0
+  PreviewEnd = 0
+  Genre = "Rock"
+  MediaType = "cd"
+  MusicStream = "song.ogg"
+}
+[SyncTrack]
+{
+  0 = TS 4
+  0 = B 146000
+  768 = B 148000
+  1536 = B 161000
+}
+[Events]
+{
+  1536 = E "section 6"
+  13824 = E "section 6"
+  23040 = E "section 6"
+}
+[ExpertSingle]
+{
+  1536 = N 7 2688
+  1536 = S 2 3168
+  4608 = N 7 3072
+  8832 = N 0 0
+  8832 = N 6 0
+  8928 = N 1 0
+  8928 = N 6 0
+  9024 = N 2 0
+  9024 = N 6 0
+  9120 = N 3 0
+  9120 = N 6 0
+  9216 = N 4 0
+  9216 = N 6 0
+  9264 = N 3 0
+  9264 = N 6 0
+  9312 = N 2 0
+  9312 = N 6 0
+  9360 = N 1 0
+  9360 = N 6 0
+  9408 = N 0 1248
+  9408 = N 6 0
+}
