@@ -244,8 +244,11 @@ export const SongTypes: ISongTypes = {
 }
 
 // The rest of sections use the 'Tick = Key Value' pattern
-export type EEventKey = ESyncTrackKey
-export function getEventKeyName(eventKey: EEventKey) {
+export type EItemEventKey =
+	| ESyncTrackKey
+	| EEventsKey
+
+export function getEventKeyName(eventKey: EItemEventKey) {
 	switch(eventKey) {
 		case ESyncTrackKey.BPM:
 			return "BPM"
@@ -253,20 +256,24 @@ export function getEventKeyName(eventKey: EEventKey) {
 			return "Time Signature"
 		case ESyncTrackKey.ANCHOR:
 			return "Anchor"
+		case EEventsKey.EVENT:
+			return "Event"
 	}
-}
-
-export enum ESyncTrackKey {
-	BPM 			= "B",
-	TIME_SIGNATURE 	= "TS",
-	ANCHOR		 	= "A",
 }
 
 /*
  * Tuples of the 'Tick = Key Value' pattern
  * meaning [key, value, shouldAppearAtLeastOnce]
  */
-export type TEventsSectionType = [EEventKey, TValueType, boolean]
+export type TEventsSectionType = [EItemEventKey, TValueType, boolean]
+
+// SyncTrack section
+export enum ESyncTrackKey {
+	BPM 			= "B",
+	TIME_SIGNATURE 	= "TS",
+	ANCHOR		 	= "A",
+}
+
 export const SyncTrackTypes: TEventsSectionType[] = [
 	[ESyncTrackKey.BPM,
 		FNumber(),
@@ -284,4 +291,13 @@ export const SyncTrackTypes: TEventsSectionType[] = [
 		FNumber(),
 		false
 	],
+]
+
+// Events section
+export enum EEventsKey {
+	EVENT = "E",
+}
+
+export const EventTypes: TEventsSectionType[] = [
+	[EEventsKey.EVENT, FString(), true],
 ]
