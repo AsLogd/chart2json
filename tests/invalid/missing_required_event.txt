@@ -5,5 +5,4 @@
 [SyncTrack]
 {
 	0 = B 120
-	0 = TS 4
 }

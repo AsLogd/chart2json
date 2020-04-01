@@ -4,16 +4,22 @@ export interface IError {
     location?: number;
 }
 export declare enum EError {
-    MISSING_SECTION = 0,
+    WRONG_SECTION_COUNT = 0,
     MISSING_REQUIRED_ITEM = 1,
-    WRONG_TYPE = 2
+    MISSING_REQUIRED_EVENT = 2,
+    WRONG_TYPE = 3,
+    INVALID_EVENT_ITEM = 4
 }
-interface IMissingSectionError {
+interface IWrongSectionCountError {
     section: Meta.ESection;
 }
 interface IMissingItemError {
     section: Meta.ESection;
-    item: Meta.TKey;
+    itemKey: Meta.TKey;
+}
+interface IMissingEventError {
+    section: Meta.ESection;
+    eventKey: Meta.EEventKey;
 }
 interface IWrongTypeError {
     section: Meta.ESection;
@@ -21,7 +27,10 @@ interface IWrongTypeError {
     expected: Meta.TValueType;
     found: Meta.TValueType;
 }
-declare type TErrorData = IMissingSectionError | IMissingItemError | IWrongTypeError;
+interface IInvalidEventItemError {
+    section: Meta.ESection;
+    item: Meta.IItem;
+}
+declare type TErrorData = IWrongSectionCountError | IMissingItemError | IMissingEventError | IWrongTypeError | IInvalidEventItemError;
 export declare function getErrorString(kind: EError, errorData: TErrorData): string;
-export declare function getTypeString(type: Meta.TValueType): string;
 export {};

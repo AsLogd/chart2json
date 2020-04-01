@@ -5,7 +5,7 @@ let lexer = moo.compile({
 	nl: 		{match: /[\n\r]+/, lineBreaks: true},
 	ws: 		/[ \t]+/,
 	string: 	/"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,
-	literal: 		/[a-zA-Z][a-zA-Z0-9]*/,
+	literal: 	/[a-zA-Z][a-zA-Z0-9]*/,
 	number: 	/-?[0-9]+/,
 	'{': 		'{',
 	'}': 		'}',
@@ -15,7 +15,7 @@ let lexer = moo.compile({
 })
 const getSection 	= ([title, _, content]) => ({title: title.value, content})
 const removeFirst   = ([_, a]) 				=> a
-const getItem 		= ([_, key, __, values])	=> ({key: key.value, values})
+const getItem 		= ([_, key, __, values])=> ({key: key.value, values})
 const catWithRest 	= ([i, r])				=> [i, ...(r||[])]
 const empty 		= ()					=> null
 %}

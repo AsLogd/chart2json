@@ -1,3 +1,3 @@
 import { IError } from "./Error";
-import { TChart } from "./Meta";
-export default function semanticCheck(chart: TChart): null | IError;
+import * as Meta from "./Meta";
+export default function semanticCheck(chart: Meta.TChart): null | IError;

@@ -26,29 +26,13 @@ export enum ESection {
 }
 
 
-export function typeFromRawValue(rawValue: IAtom[]): TValueType {
-	if (rawValue.length === 1) {
-		switch(rawValue[0].type) {
-			case "string":
-				return FString()
-			case "number":
-				return FNumber()
-			case "literal":
-				return FLiteral([rawValue[0].value as string])
-		}
-	} else if (rawValue.length > 1) {
-		const tupleTypes = rawValue.map(atom => typeFromRawValue([atom]))
-		return FTuple(tupleTypes)
-	}
-
-	return FError()
-}
-
 ///////////////
 //// Key Types
 ///////////////
 export type TTick = number
-export type TKey = ESongKey | TTick
+export type TKey =
+	| TTick
+	| ESongKey
 
 ///////////////
 //// Value Types
@@ -59,6 +43,7 @@ export enum ETypeKind {
 	NUMBER,
 	LITERAL,
 	TUPLE,
+	EITHER,
 }
 
 export interface IErrorType {
@@ -82,12 +67,19 @@ export interface ITupleType {
 	types: TValueType[]
 }
 
+export interface IEitherType {
+	kind: ETypeKind.EITHER
+	// Value will be either of these types
+	types: TValueType[]
+}
+
 export type TValueType =
 	| IErrorType
 	| IStringType
 	| INumberType
 	| ILiteralType
 	| ITupleType
+	| IEitherType
 
 
 // Convenient functions
@@ -105,6 +97,9 @@ export function isLiteral(type: TValueType): type is ILiteralType {
 }
 export function isTuple(type: TValueType): type is ITupleType {
 	return type.kind === ETypeKind.TUPLE
+}
+export function isEither(type: TValueType): type is IEitherType {
+	return type.kind === ETypeKind.EITHER
 }
 
 export function FError(): IErrorType {
@@ -134,11 +129,58 @@ export function FTuple(types: TValueType[]): ITupleType {
 		types
 	}
 }
+export function FEither(types: TValueType[]): IEitherType {
+	return {
+		kind: ETypeKind.EITHER,
+		types
+	}
+}
+export function typeFromRawValue(rawValue: IAtom[]): TValueType {
+	if (rawValue.length === 1) {
+		switch(rawValue[0].type) {
+			case "string":
+				return FString()
+			case "number":
+				return FNumber()
+			case "literal":
+				return FLiteral([rawValue[0].value as string])
+		}
+	} else if (rawValue.length > 1) {
+		const tupleTypes = rawValue.map(atom => typeFromRawValue([atom]))
+		return FTuple(tupleTypes)
+	}
+
+	return FError()
+}
+
+export function typeToString(type: TValueType): string {
+	// no default => error if not exhaustive
+	switch(type.kind) {
+		case ETypeKind.STRING:
+			return "String"
+		case ETypeKind.NUMBER:
+			return "Number"
+		case ETypeKind.LITERAL:
+			return `Literal<${ type.values.join(" | ") }>`
+		case ETypeKind.TUPLE: {
+			const types = type.types.map(type => typeToString(type))
+			return `Tuple<[${ types.join(", ") }]>`
+		}
+		case ETypeKind.EITHER: {
+			const types = type.types.map(type => typeToString(type))
+			return `Either<[${ types.join(" | ") }]>`
+		}
+		case ETypeKind.ERROR:
+			return `Error`
+	}
+
+}
 
 ///////////////
 //// Section Types
 ///////////////
 
+// Easier to write this than a 'key=>type' map
 export interface ISongTypes {
 	required?	: ESongKey[]
 	string?		: ESongKey[]
@@ -193,10 +235,53 @@ export const SongTypes: ISongTypes = {
 	],
 	number: [
 		ESongKey.OFFSET,		ESongKey.RESOLUTION,
-		ESongKey.PREVIEWSTART, ESongKey.PREVIEWEND,
+		ESongKey.PREVIEWSTART, 	ESongKey.PREVIEWEND,
 		ESongKey.DIFFICULTY
 	],
 	literal: [
 		[ESongKey.PLAYER2, FLiteral(["bass", "guitar"])]
 	]
 }
+
+// The rest of sections use the 'Tick = Key Value' pattern
+export type EEventKey = ESyncTrackKey
+export function getEventKeyName(eventKey: EEventKey) {
+	switch(eventKey) {
+		case ESyncTrackKey.BPM:
+			return "BPM"
+		case ESyncTrackKey.TIME_SIGNATURE:
+			return "Time Signature"
+		case ESyncTrackKey.ANCHOR:
+			return "Anchor"
+	}
+}
+
+export enum ESyncTrackKey {
+	BPM 			= "B",
+	TIME_SIGNATURE 	= "TS",
+	ANCHOR		 	= "A",
+}
+
+/*
+ * Tuples of the 'Tick = Key Value' pattern
+ * meaning [key, value, shouldAppearAtLeastOnce]
+ */
+export type TEventsSectionType = [EEventKey, TValueType, boolean]
+export const SyncTrackTypes: TEventsSectionType[] = [
+	[ESyncTrackKey.BPM,
+		FNumber(),
+		true
+	],
+	[ESyncTrackKey.TIME_SIGNATURE,
+		// One or two numbers
+		FEither([
+			FNumber(),
+			FTuple( [FNumber(), FNumber()] )
+		]),
+		true
+	],
+	[ESyncTrackKey.ANCHOR,
+		FNumber(),
+		false
+	],
+]
