@@ -1,17 +1,15 @@
 const fs = require('fs')
 const path = require('path')
 const nearley = require("nearley")
-const grammar = require("../lib/chart.js")
+const grammar = require("../lib/grammar.js")
 const Log = require("../lib/Log.js").default
-const semanticCheck = require("../lib/semanticCheck.js").default
+const semanticCheck = require("../lib/Semantic.js").default
 
 const validFolder = path.join(__dirname, './valid/')
 const invalidFolder = path.join(__dirname, './invalid/')
 
-function dumpTest(path, data, results) {
-	Log.info("Input dump ("+path+"):")
-	Log.dump(data)
-	Log.info("Results:")
+function dumpTest(path, results) {
+	Log.info("Results for ("+path+"):")
 	Log.dump(results)
 }
 
@@ -31,12 +29,12 @@ fs.readdirSync(validFolder).forEach(file => {
 	}
 	if (parser.results.length > 1) {
 		Log.warn(" - "+testName+" - Ambiguous!")
-		dumpTest(path, data, parser.results)
+		dumpTest(path, parser.results)
 		return
 	}
 	if (parser.results.length === 0) {
 		Log.error(" - "+testName+" - KO (No matching)")
-		dumpTest(path, data, parser.results)
+		dumpTest(path, parser.results)
 		return
 	}
 
@@ -77,5 +75,5 @@ fs.readdirSync(invalidFolder).forEach(file => {
 	}
 
 	Log.error(" - "+testName+" - KO")
-	dumpTest(path, data, parser.results)
+	dumpTest(path, parser.results)
 });

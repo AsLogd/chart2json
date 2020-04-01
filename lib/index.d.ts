@@ -1,4 +1,4 @@
-import { Failable } from "./failable";
+import { Failable } from "./Failable";
 export interface Chart {
     song: any;
 }

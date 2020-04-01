@@ -12,12 +12,12 @@
     "prebuild": "run-s clean",
     "build": "run-s build:*",
     "build:lib": "mkdir lib",
-    "build:grammar": "nearleyc chart.ne -o lib/chart.js",
+    "build:grammar": "nearleyc src/grammar.ne -o lib/grammar.js",
     "build:ts": "tsc",
     "pretest": "run-s build",
     "test": "node tests/test.js",
     "pretest-grammar": "run-s build",
-    "test-grammar": "npx nearley-test lib/chart.js"
+    "test-grammar": "npx nearley-test lib/grammar.js"
   },
   "repository": {
     "type": "git",

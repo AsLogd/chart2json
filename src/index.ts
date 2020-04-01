@@ -1,14 +1,14 @@
 import Nearley from "nearley"
-//the chart module will be available after build step
+//the grammar module will be available after build step
 //@ts-ignore
-import grammar from "./chart"
+import grammar from "./grammar"
 import {
 	Failable,
 	Failure,
 	Success
-} from "./failable"
+} from "./Failable"
 
-import check from "./semanticCheck"
+import check from "./Semantic"
 
 export interface Chart {
 	song: any
