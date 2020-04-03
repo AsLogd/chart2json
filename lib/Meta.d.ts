@@ -96,12 +96,16 @@ export declare enum ESongKey {
     CROWDSTREAM = "CrowdStream"
 }
 export declare const SongTypes: ISongTypes;
-export declare type EEventKey = ESyncTrackKey;
-export declare function getEventKeyName(eventKey: EEventKey): "BPM" | "Time Signature" | "Anchor";
+export declare type EItemEventKey = ESyncTrackKey | EEventsKey;
+export declare function getEventKeyName(eventKey: EItemEventKey): "Event" | "BPM" | "Time Signature" | "Anchor";
+export declare type TEventsSectionType = [EItemEventKey, TValueType, boolean];
 export declare enum ESyncTrackKey {
     BPM = "B",
     TIME_SIGNATURE = "TS",
     ANCHOR = "A"
 }
-export declare type TEventsSectionType = [EEventKey, TValueType, boolean];
 export declare const SyncTrackTypes: TEventsSectionType[];
+export declare enum EEventsKey {
+    EVENT = "E"
+}
+export declare const EventTypes: TEventsSectionType[];

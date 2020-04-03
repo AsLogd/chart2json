@@ -1,0 +1,14 @@
+[Song]
+{
+  Resolution = 192
+}
+[SyncTrack]
+{
+	0 = B 120
+	0 = TS 4
+}
+[Events]
+{
+	10 = E "lyrics OOoooo"
+	20 = E "End"
+}

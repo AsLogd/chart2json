@@ -299,5 +299,5 @@ export enum EEventsKey {
 }
 
 export const EventTypes: TEventsSectionType[] = [
-	[EEventsKey.EVENT, FString(), true],
+	[EEventsKey.EVENT, FString(), false],
 ]

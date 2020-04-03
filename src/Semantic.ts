@@ -41,6 +41,22 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 		return syncTrackSectionError
 	}
 
+	const eventsSection = getOptionalSection(secs, Meta.ESection.EVENTS)
+	if (eventsSection) {
+		const eventsSectionTypeError = checkEventTypes(
+			Meta.ESection.EVENTS,
+			Meta.EventTypes,
+			eventsSection.content
+		)
+		if (eventsSectionTypeError) {
+			return eventsSectionTypeError
+		}
+		const lyricsPhraseError = checkLyricsPhrases(eventsSection.content)
+		if (lyricsPhraseError) {
+			return lyricsPhraseError
+		}
+	}
+
 	return null
 
 }
@@ -67,6 +83,10 @@ function checkRequiredSections(secs: Meta.ISection[], required: Meta.ESection[])
  */
 function getSection(sections: Meta.ISection[], sectionName: Meta.ESection): Meta.ISection {
 	return sections.find(x => x.title === sectionName) as Meta.ISection
+}
+
+function getOptionalSection(sections: Meta.ISection[], sectionName: Meta.ESection): Meta.ISection | undefined {
+	return sections.find(x => x.title === sectionName)
 }
 
 function containsSectionExactlyOnce(sections: Meta.ISection[], sectionName: Meta.ESection) {
@@ -281,6 +301,50 @@ function isValidEventItem(item: Meta.IItem) {
 		&& item.values[0].type === "literal"
 
 	return hasValidItemKey && hasValidValueKey
+}
+
+/*
+ * lyric and phrase_end events should be preceded by a phrase_start
+ *
+ */
+function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
+	let inPhrase = false
+	const errorItem = content.find(item => {
+		const eventType = item.values[0].value
+		if (eventType === Meta.EEventsKey.EVENT) {
+			// We already checked that all events are strings
+			const eventValue = item.values[1].value as string
+			const eventSubtype = eventValue.split(" ")[0]
+			switch (eventSubtype) {
+				case "phrase_start":
+					inPhrase = true
+					return false
+				case "phrase_end":
+					if (inPhrase) {
+						inPhrase = false
+						return false
+					} else {
+						// Error. phrase_end not in phrase
+						return true
+					}
+				case "lyric":
+					// Error only if not in frase
+					return !inPhrase
+			}
+		}
+	})
+	if(errorItem) {
+		const eventValue = errorItem.values[1].value as string
+		const eventSubtype = eventValue.split(" ")[0]
+		return ({
+			reason: getErrorString(EError.WRONG_LYRICS, {
+				item: errorItem,
+				found: eventSubtype
+			})
+		})
+	}
+
+	return null
 }
 
 //tsc semanticCheck.ts --lib 'es2018','dom' --module 'commonjs'

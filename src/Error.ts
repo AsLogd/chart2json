@@ -12,6 +12,7 @@ export enum EError {
 	MISSING_REQUIRED_EVENT,
 	WRONG_TYPE,
 	INVALID_EVENT_ITEM,
+	WRONG_LYRICS,
 }
 
 interface IWrongSectionCountError {
@@ -25,7 +26,7 @@ interface IMissingItemError {
 
 interface IMissingEventError {
 	section: Meta.ESection,
-	eventKey: Meta.EEventKey
+	eventKey: Meta.EItemEventKey
 }
 
 interface IWrongTypeError {
@@ -40,12 +41,18 @@ interface IInvalidEventItemError {
 	item: Meta.IItem
 }
 
+interface IWrongLyricsError {
+	item: Meta.IItem
+	found: string
+}
+
 type TErrorData =
 	| IWrongSectionCountError
 	| IMissingItemError
 	| IMissingEventError
 	| IWrongTypeError
 	| IInvalidEventItemError
+	| IWrongLyricsError
 
 export function getErrorString(kind: EError, errorData: TErrorData): string {
 	// no default => error if not exhaustive
@@ -60,6 +67,8 @@ export function getErrorString(kind: EError, errorData: TErrorData): string {
 			return getWrongTypeError(errorData as IWrongTypeError)
 		case EError.INVALID_EVENT_ITEM:
 			return getInvalidEventItemError(errorData as IInvalidEventItemError)
+		case EError.WRONG_LYRICS:
+			return getWrongLyricsError(errorData as IWrongLyricsError)
 
 	}
 }
@@ -74,11 +83,11 @@ function getMissingItemError(data: IMissingItemError) {
 
 function getMissingEventError(data: IMissingEventError) {
 	const name = Meta.getEventKeyName(data.eventKey)
-	return `A required event { ${data.eventKey} } (${name}) has to appear at least once in section { ${data.section} }`
+	return `A required event { ${data.eventKey} (${name}) } has to appear at least once in section { ${data.section} }`
 }
 
 function getWrongTypeError(data: IWrongTypeError) {
-	return `Unexpected type found in { ${data.section}:${data.item} }
+	return `Unexpected type found in item with key { ${data.item} } at section { ${data.section} }
 - Expected:
 	${ Meta.typeToString(data.expected) }
 - Found:
@@ -88,4 +97,8 @@ function getWrongTypeError(data: IWrongTypeError) {
 function getInvalidEventItemError(data: IInvalidEventItemError) {
 	const values = data.item.values.join(" ")
 	return `Invalid event { ${data.item.key} = ${values} } found in section { ${data.section} }`
+}
+
+function getWrongLyricsError(data: IWrongLyricsError) {
+	return `'lyric' and 'phrase_end' events should happen inside a phrase. Found { ${data.found} } in item { ${data.item} }`
 }
