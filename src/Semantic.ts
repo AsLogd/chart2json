@@ -18,11 +18,13 @@ export default function semanticCheck(chart: Meta.TChart): null | IError {
  * Returns null if the chart is valid. Otherwise returns an error
  */
 function checkChart(secs: Meta.ISection[]): null | IError {
+	const trackNames = Meta.getPossibleTrackNames()
+
 	{ // Check required sections
-		const requiredSectionError = checkRequiredSections(secs, [
-			Meta.ESection.SONG,
-			Meta.ESection.SYNC_TRACK
-		])
+		const requiredSectionError = checkRequiredSections(secs,
+			[Meta.ESection.SONG, Meta.ESection.SYNC_TRACK],
+			trackNames,
+		)
 		if (requiredSectionError) {
 			return requiredSectionError
 		}
@@ -69,7 +71,6 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 	}
 
 	{ // Check Tracks (Difficulty+Instrument) sections
-		const trackNames = Meta.getPossibleTrackNames()
 		for (const name of trackNames) {
 			const currentTrackSection = getOptionalSection(secs, name)
 			if (!currentTrackSection)
@@ -96,7 +97,7 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 
 }
 
-function checkRequiredSections(secs: Meta.ISection[], required: Meta.ESection[]): null | IError {
+function checkRequiredSections(secs: Meta.ISection[], required: Meta.ESection[], oneOf: string[]): null | IError {
 	const wrongCountSection = required.find(reqSec =>
 		!containsSectionExactlyOnce(secs, reqSec)
 	)
@@ -105,6 +106,18 @@ function checkRequiredSections(secs: Meta.ISection[], required: Meta.ESection[])
 		return {
 			reason: getErrorString(EError.WRONG_SECTION_COUNT, {
 				section: wrongCountSection
+			})
+		}
+	}
+
+	const hasOneSectionOf = oneOf.some(sectionName =>
+		!!(getOptionalSection(secs, sectionName))
+	)
+
+	if (!hasOneSectionOf) {
+		return {
+			reason: getErrorString(EError.MISSING_ONE_OF, {
+				sections: oneOf
 			})
 		}
 	}

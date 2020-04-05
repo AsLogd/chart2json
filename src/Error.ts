@@ -8,6 +8,7 @@ export interface IError {
 }
 export enum EError {
 	WRONG_SECTION_COUNT,
+	MISSING_ONE_OF,
 	MISSING_REQUIRED_ITEM,
 	MISSING_REQUIRED_EVENT,
 	WRONG_TYPE,
@@ -19,6 +20,10 @@ export enum EError {
 
 interface IWrongSectionCountError {
 	section: string
+}
+
+interface IMissingOneOfError {
+	sections: string[]
 }
 
 interface IMissingItemError {
@@ -56,6 +61,7 @@ interface IWrongNoteFlagError {
 
 type TErrorData =
 	| IWrongSectionCountError
+	| IMissingOneOfError
 	| IMissingItemError
 	| IMissingEventError
 	| IWrongTypeError
@@ -68,6 +74,8 @@ export function getErrorString(kind: EError, errorData: TErrorData): string {
 	switch(kind) {
 		case EError.WRONG_SECTION_COUNT:
 			return getWrongSectionCountError(errorData as IWrongSectionCountError)
+		case EError.MISSING_ONE_OF:
+			return getMissingOneOfError(errorData as IMissingOneOfError)
 		case EError.MISSING_REQUIRED_ITEM:
 			return getMissingItemError(errorData as IMissingItemError)
 		case EError.MISSING_REQUIRED_EVENT:
@@ -88,6 +96,13 @@ export function getErrorString(kind: EError, errorData: TErrorData): string {
 
 function getWrongSectionCountError(data: IWrongSectionCountError) {
 	return `A required section { ${data.section} } is missing or has multiple definitions`
+}
+
+function getMissingOneOfError(data: IMissingOneOfError) {
+	const sections = data.sections.join(",\n\t")
+	return `At least one of the following sections is required and none was found {
+	${sections}
+}`
 }
 
 function getMissingItemError(data: IMissingItemError) {
