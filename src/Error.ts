@@ -13,37 +13,45 @@ export enum EError {
 	WRONG_TYPE,
 	INVALID_EVENT_ITEM,
 	WRONG_LYRICS,
+	WRONG_NOTE_FLAG,
+	DUPLICATE_NOTE_EVENT,
 }
 
 interface IWrongSectionCountError {
-	section: Meta.ESection
+	section: string
 }
 
 interface IMissingItemError {
-	section: Meta.ESection,
+	section: string,
 	itemKey: Meta.TKey
 }
 
 interface IMissingEventError {
-	section: Meta.ESection,
+	section: string,
 	eventKey: Meta.EItemEventKey
 }
 
 interface IWrongTypeError {
-	section: Meta.ESection,
-	item: Meta.TKey,
+	section: string,
+	item: Meta.IItem,
 	expected: Meta.TValueType,
 	found: Meta.TValueType
 }
 
 interface IInvalidEventItemError {
-	section: Meta.ESection,
+	section: string,
 	item: Meta.IItem
 }
 
 interface IWrongLyricsError {
 	item: Meta.IItem
 	found: string
+}
+
+interface IWrongNoteFlagError {
+	section: string,
+	tick: number
+	foundValues: string[]
 }
 
 type TErrorData =
@@ -53,6 +61,7 @@ type TErrorData =
 	| IWrongTypeError
 	| IInvalidEventItemError
 	| IWrongLyricsError
+	| IWrongNoteFlagError
 
 export function getErrorString(kind: EError, errorData: TErrorData): string {
 	// no default => error if not exhaustive
@@ -69,6 +78,10 @@ export function getErrorString(kind: EError, errorData: TErrorData): string {
 			return getInvalidEventItemError(errorData as IInvalidEventItemError)
 		case EError.WRONG_LYRICS:
 			return getWrongLyricsError(errorData as IWrongLyricsError)
+		case EError.WRONG_NOTE_FLAG:
+			return getWrongNoteFlagError(errorData as IWrongNoteFlagError)
+		case EError.DUPLICATE_NOTE_EVENT:
+			return getDuplicateNoteError(errorData as IWrongNoteFlagError)
 
 	}
 }
@@ -87,7 +100,8 @@ function getMissingEventError(data: IMissingEventError) {
 }
 
 function getWrongTypeError(data: IWrongTypeError) {
-	return `Unexpected type found in item with key { ${data.item} } at section { ${data.section} }
+	const line = data.item.values[0].line
+	return `Unexpected type found at line { ${line} } (section: ${data.section} key: ${data.item.key})
 - Expected:
 	${ Meta.typeToString(data.expected) }
 - Found:
@@ -96,9 +110,21 @@ function getWrongTypeError(data: IWrongTypeError) {
 
 function getInvalidEventItemError(data: IInvalidEventItemError) {
 	const values = data.item.values.join(" ")
-	return `Invalid event { ${data.item.key} = ${values} } found in section { ${data.section} }`
+	const line = data.item.values[0].line
+	return `Invalid event { ${data.item.key} = ${values} } found at line { line } (section: ${data.section} )`
 }
 
 function getWrongLyricsError(data: IWrongLyricsError) {
-	return `'lyric' and 'phrase_end' events should happen inside a phrase. Found { ${data.found} } in item { ${data.item} }`
+	const line = data.item.values[0].line
+	return `'lyric' and 'phrase_end' events should happen inside a phrase. Found { ${data.found} } at line { ${line} } (key: ${data.item.key}) `
+}
+
+function getWrongNoteFlagError(data: IWrongNoteFlagError) {
+	const flags = data.foundValues.map(flag => Meta.EGuitarNoteEventType[parseInt(flag)]).join(", ")
+	return `Found flags { ${flags} } without notes in tick { ${data.tick} } in section { ${data.section} }.`
+}
+
+function getDuplicateNoteError(data: IWrongNoteFlagError) {
+	const events = data.foundValues.map(flag => Meta.EGuitarNoteEventType[parseInt(flag)]).join(", ")
+	return `Found duplicated events { ${events} } in tick { ${data.tick} } in section { ${data.section} }.`
 }

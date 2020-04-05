@@ -10,13 +10,42 @@ export interface IItem {
 export declare type TRawType = "number" | "string" | "literal";
 export interface IAtom {
     type: TRawType;
-    value: string | number;
+    value: string;
+    line: number;
+    col: number;
 }
 export declare enum ESection {
     SONG = "Song",
     SYNC_TRACK = "SyncTrack",
     EVENTS = "Events"
 }
+export declare enum EDifficulty {
+    EASY = "Easy",
+    MEDIUM = "Medium",
+    HARD = "Hard",
+    EXPERT = "Expert"
+}
+export declare enum EInstrument {
+    SINGLE = "Single",
+    DOUBLEGUITAR = "DoubleGuitar",
+    DOUBLEBASS = "DoubleBass",
+    DOUBLERHYTHM = "DoubleRhythm",
+    DRUMS = "Drums",
+    KEYBOARD = "Keyboard",
+    GHLGUITAR = "GHLGuitar",
+    GHLBASS = "GHLBass"
+}
+export declare enum EGuitarNoteEventType {
+    LANE_1 = 0,
+    LANE_2 = 1,
+    LANE_3 = 2,
+    LANE_4 = 3,
+    LANE_5 = 4,
+    FORCED = 5,
+    TAP = 6,
+    OPEN = 7
+}
+export declare function getPossibleTrackNames(): string[];
 export declare type TTick = number;
 export declare type TKey = TTick | ESongKey;
 export declare enum ETypeKind {
@@ -96,8 +125,8 @@ export declare enum ESongKey {
     CROWDSTREAM = "CrowdStream"
 }
 export declare const SongTypes: ISongTypes;
-export declare type EItemEventKey = ESyncTrackKey | EEventsKey;
-export declare function getEventKeyName(eventKey: EItemEventKey): "Event" | "BPM" | "Time Signature" | "Anchor";
+export declare type EItemEventKey = ESyncTrackKey | EEventsKey | ETrackKey;
+export declare function getEventKeyName(eventKey: EItemEventKey): "Event" | "BPM" | "Time Signature" | "Anchor" | undefined;
 export declare type TEventsSectionType = [EItemEventKey, TValueType, boolean];
 export declare enum ESyncTrackKey {
     BPM = "B",
@@ -109,3 +138,9 @@ export declare enum EEventsKey {
     EVENT = "E"
 }
 export declare const EventTypes: TEventsSectionType[];
+export declare enum ETrackKey {
+    NOTE = "N",
+    SPECIAL = "S",
+    TRACK_EVENT = "E"
+}
+export declare const TrackTypes: TEventsSectionType[];

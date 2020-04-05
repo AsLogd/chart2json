@@ -15,7 +15,9 @@ export type TRawType = "number" | "string"	| "literal"
 
 export interface IAtom {
 	type: 	TRawType
-	value:	string | number
+	value:	string
+	line: 	number
+	col: 	number
 	//TODO: other values
 }
 
@@ -23,6 +25,44 @@ export enum ESection {
 	SONG 		= "Song",
 	SYNC_TRACK 	= "SyncTrack",
 	EVENTS		= "Events"
+}
+
+export enum EDifficulty {
+	EASY 	= "Easy",
+	MEDIUM 	= "Medium",
+	HARD 	= "Hard",
+	EXPERT 	= "Expert",
+}
+
+export enum EInstrument {
+	SINGLE 			= "Single",
+	DOUBLEGUITAR 	= "DoubleGuitar",
+	DOUBLEBASS 		= "DoubleBass",
+	DOUBLERHYTHM 	= "DoubleRhythm",
+	DRUMS 			= "Drums",
+	KEYBOARD 		= "Keyboard",
+	GHLGUITAR 		= "GHLGuitar",
+	GHLBASS 		= "GHLBass",
+}
+
+export enum EGuitarNoteEventType {
+	LANE_1 	= 0,
+	LANE_2 	= 1,
+	LANE_3 	= 2,
+	LANE_4 	= 3,
+	LANE_5 	= 4,
+	FORCED 	= 5,
+	TAP		= 6,
+	OPEN	= 7
+}
+
+export function getPossibleTrackNames(): string[] {
+	return Object.keys(EDifficulty).map((dif) => {
+		return Object.keys(EInstrument).map(instr => {
+			//@ts-ignore weird stuff
+			return ""+EDifficulty[dif]+EInstrument[instr]
+		})
+	}).flat() // requires node 12.4
 }
 
 
@@ -117,6 +157,8 @@ export function FNumber(): INumberType {
 		kind: ETypeKind.NUMBER
 	}
 }
+
+// A literal with an empty array is a free literal (any string literal is valid)
 export function FLiteral(values: string[]): ILiteralType {
 	return {
 		kind: ETypeKind.LITERAL,
@@ -247,6 +289,7 @@ export const SongTypes: ISongTypes = {
 export type EItemEventKey =
 	| ESyncTrackKey
 	| EEventsKey
+	| ETrackKey
 
 export function getEventKeyName(eventKey: EItemEventKey) {
 	switch(eventKey) {
@@ -301,3 +344,32 @@ export enum EEventsKey {
 export const EventTypes: TEventsSectionType[] = [
 	[EEventsKey.EVENT, FString(), false],
 ]
+
+// Track sections
+export enum ETrackKey {
+	NOTE 		= "N",
+	SPECIAL 	= "S",
+	TRACK_EVENT = "E"
+}
+
+export const TrackTypes: TEventsSectionType[] = [
+	[ETrackKey.NOTE,
+		FTuple([
+			FNumber(),
+			FNumber()
+		]),
+		true
+	],
+	[ETrackKey.SPECIAL,
+		FTuple([
+			FNumber(),
+			FNumber()
+		]),
+		false
+	],
+	[EEventsKey.EVENT,
+		FLiteral([]),
+		false
+	],
+]
+

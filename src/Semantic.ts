@@ -6,6 +6,7 @@ import {
 
 import * as Meta from "./Meta"
 
+
 /*
  * Performs a semantic check on a syntactically correct chart file
  */
@@ -17,43 +18,77 @@ export default function semanticCheck(chart: Meta.TChart): null | IError {
  * Returns null if the chart is valid. Otherwise returns an error
  */
 function checkChart(secs: Meta.ISection[]): null | IError {
-	const requiredSectionError = checkRequiredSections(secs, [
-		Meta.ESection.SONG,
-		Meta.ESection.SYNC_TRACK
-	])
-	if (requiredSectionError) {
-		return requiredSectionError
-	}
-
-	const songSection = getSection(secs, Meta.ESection.SONG)
-	const songSectionError = checkSongTypes(Meta.SongTypes, songSection.content)
-	if (songSectionError) {
-		return songSectionError
-	}
-
-	const syncTrackSection = getSection(secs, Meta.ESection.SYNC_TRACK)
-	const syncTrackSectionError = checkEventTypes(
-		Meta.ESection.SYNC_TRACK,
-		Meta.SyncTrackTypes,
-		syncTrackSection.content
-	)
-	if (syncTrackSectionError) {
-		return syncTrackSectionError
-	}
-
-	const eventsSection = getOptionalSection(secs, Meta.ESection.EVENTS)
-	if (eventsSection) {
-		const eventsSectionTypeError = checkEventTypes(
-			Meta.ESection.EVENTS,
-			Meta.EventTypes,
-			eventsSection.content
-		)
-		if (eventsSectionTypeError) {
-			return eventsSectionTypeError
+	{ // Check required sections
+		const requiredSectionError = checkRequiredSections(secs, [
+			Meta.ESection.SONG,
+			Meta.ESection.SYNC_TRACK
+		])
+		if (requiredSectionError) {
+			return requiredSectionError
 		}
-		const lyricsPhraseError = checkLyricsPhrases(eventsSection.content)
-		if (lyricsPhraseError) {
-			return lyricsPhraseError
+
+	}
+
+	{ // Check Song section
+		const songSection = getSection(secs, Meta.ESection.SONG)
+		const songSectionError = checkSongTypes(Meta.SongTypes, songSection.content)
+		if (songSectionError) {
+			return songSectionError
+		}
+
+	}
+
+	{ // Check SyncTrack section
+		const syncTrackSection = getSection(secs, Meta.ESection.SYNC_TRACK)
+		const syncTrackSectionError = checkEventTypes(
+			Meta.ESection.SYNC_TRACK,
+			Meta.SyncTrackTypes,
+			syncTrackSection.content
+		)
+		if (syncTrackSectionError) {
+			return syncTrackSectionError
+		}
+	}
+
+	{ // Check Events section
+		const eventsSection = getOptionalSection(secs, Meta.ESection.EVENTS)
+		if (eventsSection) {
+			const eventsSectionTypeError = checkEventTypes(
+				Meta.ESection.EVENTS,
+				Meta.EventTypes,
+				eventsSection.content
+			)
+			if (eventsSectionTypeError) {
+				return eventsSectionTypeError
+			}
+			const lyricsPhraseError = checkLyricsPhrases(eventsSection.content)
+			if (lyricsPhraseError) {
+				return lyricsPhraseError
+			}
+		}
+	}
+
+	{ // Check Tracks (Difficulty+Instrument) sections
+		const trackNames = Meta.getPossibleTrackNames()
+		for (const name of trackNames) {
+			const currentTrackSection = getOptionalSection(secs, name)
+			if (!currentTrackSection)
+				continue
+			const currentTrackSectionError = checkEventTypes(
+				name,
+				Meta.TrackTypes,
+				currentTrackSection.content
+			)
+			if (currentTrackSectionError) {
+				return currentTrackSectionError
+			}
+			// Non-drums instruments have flags that require notes (tap and forced)
+			if (!name.includes(Meta.EInstrument.DRUMS)) {
+				const noteFlagsError = checkGuitarNoteFlags(name, currentTrackSection.content)
+				if(noteFlagsError) {
+					return noteFlagsError
+				}
+			}
 		}
 	}
 
@@ -85,7 +120,7 @@ function getSection(sections: Meta.ISection[], sectionName: Meta.ESection): Meta
 	return sections.find(x => x.title === sectionName) as Meta.ISection
 }
 
-function getOptionalSection(sections: Meta.ISection[], sectionName: Meta.ESection): Meta.ISection | undefined {
+function getOptionalSection(sections: Meta.ISection[], sectionName: string): Meta.ISection | undefined {
 	return sections.find(x => x.title === sectionName)
 }
 
@@ -147,7 +182,7 @@ function checkSongStringItems(keys: Meta.ESongKey[], content: Meta.IItem[]): nul
 		return {
 			reason: getErrorString(EError.WRONG_TYPE, {
 				section: Meta.ESection.SONG,
-				item: itemWithErr.key,
+				item: itemWithErr,
 				expected: Meta.FString(),
 				found: Meta.typeFromRawValue(itemWithErr.values)
 			})
@@ -167,7 +202,7 @@ function checkSongNumberItems(keys: Meta.ESongKey[], content: Meta.IItem[]): nul
 		return {
 			reason: getErrorString(EError.WRONG_TYPE, {
 				section: Meta.ESection.SONG,
-				item: itemWithErr.key,
+				item: itemWithErr,
 				expected: Meta.FNumber(),
 				found: Meta.typeFromRawValue(itemWithErr.values)
 			})
@@ -188,7 +223,7 @@ function checkSongLiteralItems(literalTuples: [Meta.ESongKey, Meta.ILiteralType]
 				return {
 					reason: getErrorString(EError.WRONG_TYPE, {
 						section: Meta.ESection.SONG,
-						item: item.key,
+						item: item,
 						expected: Meta.FLiteral(literalValues),
 						found: Meta.typeFromRawValue(item.values)
 					})
@@ -199,7 +234,7 @@ function checkSongLiteralItems(literalTuples: [Meta.ESongKey, Meta.ILiteralType]
 	return null
 }
 
-function checkEventTypes(section: Meta.ESection, types: Meta.TEventsSectionType[], content: Meta.IItem[]): null | IError {
+function checkEventTypes(section: string, types: Meta.TEventsSectionType[], content: Meta.IItem[]): null | IError {
 	const itemError = content.find(item => !isValidEventItem(item))
 	if (itemError) {
 		return {
@@ -229,7 +264,7 @@ function checkEventTypes(section: Meta.ESection, types: Meta.TEventsSectionType[
 				return({
 					reason: getErrorString(EError.WRONG_TYPE, {
 						section,
-						item: item.key,
+						item: item,
 						expected: expectedType,
 						found: Meta.typeFromRawValue(eventValues)
 					})
@@ -272,8 +307,12 @@ function isValidString(values: Meta.IAtom[]): boolean {
 function isValidLiteral(values: Meta.IAtom[], definition: Meta.ILiteralType): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "literal"
-		// value is equal to some of the defined values
-		&&	definition.values.some(val => values[0].value === val)
+		&&	(
+			// this is a free literal
+			definition.values.length === 0
+			// or value is equal to some of the defined values
+			|| definition.values.some(val => values[0].value === val)
+		)
 }
 
 function isValidTuple(values: Meta.IAtom[], definition: Meta.ITupleType): boolean {
@@ -312,9 +351,8 @@ function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
 	const errorItem = content.find(item => {
 		const eventType = item.values[0].value
 		if (eventType === Meta.EEventsKey.EVENT) {
-			// We already checked that all events are strings
-			const eventValue = item.values[1].value as string
-			const eventSubtype = eventValue.split(" ")[0]
+			// We already checked that the event value is a string
+			const eventSubtype = getEventSubtype(item)
 			switch (eventSubtype) {
 				case "phrase_start":
 					inPhrase = true
@@ -334,8 +372,7 @@ function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
 		}
 	})
 	if(errorItem) {
-		const eventValue = errorItem.values[1].value as string
-		const eventSubtype = eventValue.split(" ")[0]
+		const eventSubtype = getEventSubtype(errorItem)
 		return ({
 			reason: getErrorString(EError.WRONG_LYRICS, {
 				item: errorItem,
@@ -347,6 +384,87 @@ function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
 	return null
 }
 
-//tsc semanticCheck.ts --lib 'es2018','dom' --module 'commonjs'
-//npx nearleyc chart.ne -o chart.js
-//npx nearley-test chart.js
+function checkGuitarNoteFlags(section: string, content: Meta.IItem[]): IError | null {
+	const notes = content.filter(item => item.values[0].value === Meta.ETrackKey.NOTE)
+	const ticks = groupBy(notes, "key")
+	// Check: no repeated events in same tick
+	const tickRepeatedEventError = Object.keys(ticks).find(tick => {
+		const itemsOnSameTick = ticks[tick]
+		return itemsOnSameTick.find(itemA => {
+			const typeA = itemA.values[1].value
+			return itemsOnSameTick.find(itemB => {
+				const typeB = itemB.values[1].value
+				if (itemA === itemB) {
+					return false
+				}
+				return typeA === typeB
+			})
+		})
+	})
+	if (tickRepeatedEventError) {
+		const found = ticks[tickRepeatedEventError].map(item => item.values[1].value)
+		return ({
+			reason: getErrorString(EError.DUPLICATE_NOTE_EVENT, {
+				section,
+				tick: parseInt(tickRepeatedEventError),
+				foundValues: found
+			})
+		})
+	}
+
+	// Check: no flags without notes
+	const tickFlagError = Object.keys(ticks).find(tick => {
+		const itemsOnSameTick = ticks[tick]
+		const tickIsFlagged = itemsOnSameTick.some(item =>{
+			const value = parseInt(item.values[1].value)
+			return (
+					value === Meta.EGuitarNoteEventType.FORCED
+				|| 	value === Meta.EGuitarNoteEventType.TAP
+			)
+		})
+
+		const hasNotes = itemsOnSameTick.some(item =>{
+			const value = parseInt(item.values[1].value)
+			return (
+					value !== Meta.EGuitarNoteEventType.FORCED
+				&& 	value !== Meta.EGuitarNoteEventType.TAP
+			)
+		})
+		const tickIsOk = !tickIsFlagged || hasNotes
+		return !tickIsOk
+	})
+	if (tickFlagError) {
+		const found = ticks[tickFlagError].map(item => item.values[1].value)
+		return ({
+			reason: getErrorString(EError.WRONG_NOTE_FLAG, {
+				section,
+				tick: parseInt(tickFlagError),
+				foundValues: found
+			})
+		})
+	}
+	return null
+}
+
+/**
+ * @pre values has to be a string
+ */
+function getEventSubtype(item: Meta.IItem) {
+	const eventValue = item.values[1].value as string
+	// Remove quotes, get first word in string
+	return eventValue.substr(1, eventValue.length-2).split(" ")[0]
+}
+
+// Util
+// Groups a list of objects by the value of a given key
+export function groupBy<T extends any>(list: T[], key: string): {[key: string]: T[]} {
+	const groups:{[key: string]: T[]} = {}
+	list.forEach(e => {
+		if(!groups[e[key]]) {
+			groups[e[key]] = [e]
+		} else {
+			groups[e[key]].push(e)
+		}
+	})
+	return groups
+}

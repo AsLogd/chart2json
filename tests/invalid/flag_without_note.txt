@@ -1,0 +1,13 @@
+[Song]
+{
+  Resolution = 192
+}
+[SyncTrack]
+{
+  0 = TS 4
+  0 = B 146000
+}
+[ExpertSingle]
+{
+  8832 = N 6 0
+}

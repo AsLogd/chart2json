@@ -9,6 +9,6 @@
 }
 [Events]
 {
-	10 = E "lyrics OOoooo"
+	10 = E "lyric OOoooo"
 	20 = E "End"
 }
