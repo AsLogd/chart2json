@@ -98,7 +98,8 @@ export interface INumberType {
 }
 export interface ILiteralType {
 	kind: ETypeKind.LITERAL
-	// List containing possible values (string literals)
+	// List containing possible values
+	// (string literals, empty for 'any')
 	values: string[]
 }
 export interface ITupleType {
@@ -121,27 +122,6 @@ export type TValueType =
 	| ITupleType
 	| IEitherType
 
-
-// Convenient functions
-export function isError(type: TValueType): type is IErrorType {
-	return type.kind === ETypeKind.ERROR
-}
-export function isString(type: TValueType): type is IStringType {
-	return type.kind === ETypeKind.STRING
-}
-export function isNumber(type: TValueType): type is INumberType {
-	return type.kind === ETypeKind.NUMBER
-}
-export function isLiteral(type: TValueType): type is ILiteralType {
-	return type.kind === ETypeKind.LITERAL
-}
-export function isTuple(type: TValueType): type is ITupleType {
-	return type.kind === ETypeKind.TUPLE
-}
-export function isEither(type: TValueType): type is IEitherType {
-	return type.kind === ETypeKind.EITHER
-}
-
 export function FError(): IErrorType {
 	return {
 		kind: ETypeKind.ERROR
@@ -158,7 +138,6 @@ export function FNumber(): INumberType {
 	}
 }
 
-// A literal with an empty array is a free literal (any string literal is valid)
 export function FLiteral(values: string[]): ILiteralType {
 	return {
 		kind: ETypeKind.LITERAL,

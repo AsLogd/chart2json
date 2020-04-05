@@ -387,7 +387,21 @@ function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
 function checkGuitarNoteFlags(section: string, content: Meta.IItem[]): IError | null {
 	const notes = content.filter(item => item.values[0].value === Meta.ETrackKey.NOTE)
 	const ticks = groupBy(notes, "key")
-	// Check: no repeated events in same tick
+
+	const repeatedError = checkRepeatedNoteEvent(section, ticks)
+	if (repeatedError) {
+		return repeatedError
+	}
+
+	const tickFlagError = checkNoteFlags(section, ticks)
+	if (tickFlagError) {
+		return tickFlagError
+	}
+
+	return null
+}
+
+function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.IItem[]}): IError | null {
 	const tickRepeatedEventError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		return itemsOnSameTick.find(itemA => {
@@ -412,8 +426,11 @@ function checkGuitarNoteFlags(section: string, content: Meta.IItem[]): IError | 
 		})
 	}
 
-	// Check: no flags without notes
-	const tickFlagError = Object.keys(ticks).find(tick => {
+	return null
+}
+
+function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.IItem[]}): IError | null {
+	const flagError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		const tickIsFlagged = itemsOnSameTick.some(item =>{
 			const value = parseInt(item.values[1].value)
@@ -433,16 +450,17 @@ function checkGuitarNoteFlags(section: string, content: Meta.IItem[]): IError | 
 		const tickIsOk = !tickIsFlagged || hasNotes
 		return !tickIsOk
 	})
-	if (tickFlagError) {
-		const found = ticks[tickFlagError].map(item => item.values[1].value)
+	if (flagError) {
+		const found = ticks[flagError].map(item => item.values[1].value)
 		return ({
 			reason: getErrorString(EError.WRONG_NOTE_FLAG, {
 				section,
-				tick: parseInt(tickFlagError),
+				tick: parseInt(flagError),
 				foundValues: found
 			})
 		})
 	}
+
 	return null
 }
 

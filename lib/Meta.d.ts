@@ -78,12 +78,6 @@ export interface IEitherType {
     types: TValueType[];
 }
 export declare type TValueType = IErrorType | IStringType | INumberType | ILiteralType | ITupleType | IEitherType;
-export declare function isError(type: TValueType): type is IErrorType;
-export declare function isString(type: TValueType): type is IStringType;
-export declare function isNumber(type: TValueType): type is INumberType;
-export declare function isLiteral(type: TValueType): type is ILiteralType;
-export declare function isTuple(type: TValueType): type is ITupleType;
-export declare function isEither(type: TValueType): type is IEitherType;
 export declare function FError(): IErrorType;
 export declare function FString(): IStringType;
 export declare function FNumber(): INumberType;
