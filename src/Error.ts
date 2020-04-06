@@ -2,11 +2,11 @@
 
 import * as Meta from "./Meta"
 
-export interface IError {
+export interface ErrorObject {
 	reason: string
 	location?: number
 }
-export enum EError {
+export enum ErrorType {
 	WRONG_SECTION_COUNT,
 	MISSING_ONE_OF,
 	MISSING_REQUIRED_ITEM,
@@ -19,115 +19,115 @@ export enum EError {
 	DUPLICATE_NOTE_EVENT,
 }
 
-interface IWrongSectionCountError {
+interface WrongSectionCountError {
 	section: string
 }
 
-interface IMissingOneOfError {
+interface MissingOneOfError {
 	sections: string[]
 }
 
-interface IMissingItemError {
+interface MissingItemError {
 	section: string,
 	itemKey: Meta.ItemKey
 }
 
-interface IMissingEventError {
+interface MissingEventError {
 	section: string,
 	eventKey: Meta.ItemEventKey
 }
 
-interface IWrongTypeError {
+interface WrongTypeError {
 	section: string,
 	item: Meta.Item,
 	expected: Meta.ValueType,
 	found: Meta.ValueType
 }
 
-interface IInvalidEventItemError {
+interface InvalidEventItemError {
 	section: string,
 	item: Meta.Item
 }
 
-interface IUnpairedAnchorError {
+interface UnpairedAnchorError {
 	tick: number
 }
 
 
-interface IWrongLyricsError {
+interface WrongLyricsError {
 	item: Meta.Item
 	found: string
 }
 
-interface IWrongNoteFlagError {
+interface WrongNoteFlagError {
 	section: string,
 	tick: number
 	foundValues: string[]
 }
 
-type TErrorData =
-	| IWrongSectionCountError
-	| IMissingOneOfError
-	| IMissingItemError
-	| IMissingEventError
-	| IUnpairedAnchorError
-	| IWrongTypeError
-	| IInvalidEventItemError
-	| IWrongLyricsError
-	| IWrongNoteFlagError
+type ErrorData =
+	| WrongSectionCountError
+	| MissingOneOfError
+	| MissingItemError
+	| MissingEventError
+	| UnpairedAnchorError
+	| WrongTypeError
+	| InvalidEventItemError
+	| WrongLyricsError
+	| WrongNoteFlagError
 
-export function getErrorString(kind: EError, errorData: TErrorData): string {
+export function getErrorString(kind: ErrorType, errorData: ErrorData): string {
 	// no default => error if not exhaustive
 	switch(kind) {
-		case EError.WRONG_SECTION_COUNT:
-			return getWrongSectionCountError(errorData as IWrongSectionCountError)
-		case EError.MISSING_ONE_OF:
-			return getMissingOneOfError(errorData as IMissingOneOfError)
-		case EError.MISSING_REQUIRED_ITEM:
-			return getMissingItemError(errorData as IMissingItemError)
-		case EError.MISSING_REQUIRED_EVENT:
-			return getMissingEventError(errorData as IMissingEventError)
-		case EError.WRONG_TYPE:
-			return getWrongTypeError(errorData as IWrongTypeError)
-		case EError.INVALID_EVENT_ITEM:
-			return getInvalidEventItemError(errorData as IInvalidEventItemError)
-		case EError.UNPAIRED_ANCHOR:
-			return getUnpairedAnchorError(errorData as IUnpairedAnchorError)
-		case EError.WRONG_LYRICS:
-			return getWrongLyricsError(errorData as IWrongLyricsError)
-		case EError.WRONG_NOTE_FLAG:
-			return getWrongNoteFlagError(errorData as IWrongNoteFlagError)
-		case EError.DUPLICATE_NOTE_EVENT:
-			return getDuplicateNoteError(errorData as IWrongNoteFlagError)
+		case ErrorType.WRONG_SECTION_COUNT:
+			return getWrongSectionCountError(errorData as WrongSectionCountError)
+		case ErrorType.MISSING_ONE_OF:
+			return getMissingOneOfError(errorData as MissingOneOfError)
+		case ErrorType.MISSING_REQUIRED_ITEM:
+			return getMissingItemError(errorData as MissingItemError)
+		case ErrorType.MISSING_REQUIRED_EVENT:
+			return getMissingEventError(errorData as MissingEventError)
+		case ErrorType.WRONG_TYPE:
+			return getWrongTypeError(errorData as WrongTypeError)
+		case ErrorType.INVALID_EVENT_ITEM:
+			return getInvalidEventItemError(errorData as InvalidEventItemError)
+		case ErrorType.UNPAIRED_ANCHOR:
+			return getUnpairedAnchorError(errorData as UnpairedAnchorError)
+		case ErrorType.WRONG_LYRICS:
+			return getWrongLyricsError(errorData as WrongLyricsError)
+		case ErrorType.WRONG_NOTE_FLAG:
+			return getWrongNoteFlagError(errorData as WrongNoteFlagError)
+		case ErrorType.DUPLICATE_NOTE_EVENT:
+			return getDuplicateNoteError(errorData as WrongNoteFlagError)
 
 	}
 }
 
-function getWrongSectionCountError(data: IWrongSectionCountError) {
+function getWrongSectionCountError(data: WrongSectionCountError) {
 	return `A required section { ${data.section} } is missing or has multiple definitions`
 }
 
-function getMissingOneOfError(data: IMissingOneOfError) {
+function getMissingOneOfError(data: MissingOneOfError) {
 	const sections = data.sections.join(",\n\t")
 	return `At least one of the following sections is required and none was found {
 	${sections}
 }`
 }
 
-function getMissingItemError(data: IMissingItemError) {
+function getMissingItemError(data: MissingItemError) {
 	return `A required item { ${data.itemKey} } is missing in section { ${data.section} }`
 }
 
-function getMissingEventError(data: IMissingEventError) {
+function getMissingEventError(data: MissingEventError) {
 	const name = Meta.getEventKeyName(data.eventKey)
 	return `A required event { ${data.eventKey} (${name}) } has to appear at least once in section { ${data.section} }`
 }
 
-function getUnpairedAnchorError(data: IUnpairedAnchorError) {
+function getUnpairedAnchorError(data: UnpairedAnchorError) {
 	return `Tick { ${data.tick} } has defined an Anchor but not a BPM event. All anchors should be paired with a BPM event`
 }
 
-function getWrongTypeError(data: IWrongTypeError) {
+function getWrongTypeError(data: WrongTypeError) {
 	const line = data.item.values[0].line
 	return `Unexpected type found at line { ${line} } (section: ${data.section} key: ${data.item.key})
 - Expected:
@@ -136,23 +136,23 @@ function getWrongTypeError(data: IWrongTypeError) {
 	${ Meta.typeToString(data.found) }`
 }
 
-function getInvalidEventItemError(data: IInvalidEventItemError) {
+function getInvalidEventItemError(data: InvalidEventItemError) {
 	const values = data.item.values.join(" ")
 	const line = data.item.values[0].line
 	return `Invalid event { ${data.item.key} = ${values} } found at line { line } (section: ${data.section} )`
 }
 
-function getWrongLyricsError(data: IWrongLyricsError) {
+function getWrongLyricsError(data: WrongLyricsError) {
 	const line = data.item.values[0].line
 	return `'lyric' and 'phrase_end' events should happen inside a phrase. Found { ${data.found} } at line { ${line} } (key: ${data.item.key}) `
 }
 
-function getWrongNoteFlagError(data: IWrongNoteFlagError) {
+function getWrongNoteFlagError(data: WrongNoteFlagError) {
 	const flags = data.foundValues.map(flag => Meta.GuitarNoteEventType[parseInt(flag)]).join(", ")
 	return `Found flags { ${flags} } without notes in tick { ${data.tick} } in section { ${data.section} }.`
 }
 
-function getDuplicateNoteError(data: IWrongNoteFlagError) {
+function getDuplicateNoteError(data: WrongNoteFlagError) {
 	const events = data.foundValues.map(flag => Meta.GuitarNoteEventType[parseInt(flag)]).join(", ")
 	return `Found duplicated events { ${events} } in tick { ${data.tick} } in section { ${data.section} }.`
 }

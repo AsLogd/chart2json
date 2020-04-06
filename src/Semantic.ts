@@ -1,6 +1,6 @@
 import {
-	EError,
-	IError,
+	ErrorType,
+	ErrorObject,
 	getErrorString
 } from "./Error"
 
@@ -10,14 +10,14 @@ import * as Meta from "./Meta"
 /*
  * Performs a semantic check on a syntactically correct chart file
  */
-export default function semanticCheck(chart: Meta.Chart): null | IError {
+export default function semanticCheck(chart: Meta.Chart): null | ErrorObject {
 	return checkChart(chart)
 }
 
 /*
  * Returns null if the chart is valid. Otherwise returns an error
  */
-function checkChart(secs: Meta.Section[]): null | IError {
+function checkChart(secs: Meta.Section[]): null | ErrorObject {
 	const trackNames = Meta.getPossibleTrackNames()
 
 	{ // Check required sections
@@ -101,14 +101,14 @@ function checkChart(secs: Meta.Section[]): null | IError {
 
 }
 
-function checkRequiredSections(secs: Meta.Section[], required: Meta.SectionTitle[], oneOf: string[]): null | IError {
+function checkRequiredSections(secs: Meta.Section[], required: Meta.SectionTitle[], oneOf: string[]): null | ErrorObject {
 	const wrongCountSection = required.find(reqSec =>
 		!containsSectionExactlyOnce(secs, reqSec)
 	)
 
 	if (wrongCountSection) {
 		return {
-			reason: getErrorString(EError.WRONG_SECTION_COUNT, {
+			reason: getErrorString(ErrorType.WRONG_SECTION_COUNT, {
 				section: wrongCountSection
 			})
 		}
@@ -120,7 +120,7 @@ function checkRequiredSections(secs: Meta.Section[], required: Meta.SectionTitle
 
 	if (!hasOneSectionOf) {
 		return {
-			reason: getErrorString(EError.MISSING_ONE_OF, {
+			reason: getErrorString(ErrorType.MISSING_ONE_OF, {
 				sections: oneOf
 			})
 		}
@@ -145,7 +145,7 @@ function containsSectionExactlyOnce(sections: Meta.Section[], sectionName: Meta.
 	return sections.filter(x => x.title === sectionName).length === 1
 }
 
-function checkSongTypes(types: Meta.SongTypes, content: Meta.Item[]): null | IError {
+function checkSongTypes(types: Meta.SongTypes, content: Meta.Item[]): null | ErrorObject {
 	const {
 		required= [],
 		string 	= [],
@@ -173,14 +173,14 @@ function checkSongTypes(types: Meta.SongTypes, content: Meta.Item[]): null | IEr
 	return null
 }
 
-function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.Item[]): null | IError {
+function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.Item[]): null | ErrorObject {
 	for (const reqItem of required) {
 		const isFound = content.some(item =>
 			item.key === reqItem
 		)
 		if (!isFound) {
 			return {
-				reason: getErrorString(EError.MISSING_REQUIRED_ITEM, {
+				reason: getErrorString(ErrorType.MISSING_REQUIRED_ITEM, {
 					section: Meta.SectionTitle.SONG,
 					itemKey: reqItem
 				})
@@ -190,14 +190,14 @@ function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.Item[]):
 	return null
 }
 
-function checkSongStringItems(keys: Meta.SongKey[], content: Meta.Item[]): null | IError {
+function checkSongStringItems(keys: Meta.SongKey[], content: Meta.Item[]): null | ErrorObject {
 	const strItems = content.filter(item =>
 		keys.some(key => item.key === key)
 	)
 	const itemWithErr = strItems.find(item => !isValidString(item.values))
 	if (itemWithErr) {
 		return {
-			reason: getErrorString(EError.WRONG_TYPE, {
+			reason: getErrorString(ErrorType.WRONG_TYPE, {
 				section: Meta.SectionTitle.SONG,
 				item: itemWithErr,
 				expected: Meta.TString(),
@@ -209,7 +209,7 @@ function checkSongStringItems(keys: Meta.SongKey[], content: Meta.Item[]): null 
 	return null
 }
 
-function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null | IError {
+function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null | ErrorObject {
 	const numItems = content.filter(item =>
 		keys.some(key => item.key === key)
 	)
@@ -217,7 +217,7 @@ function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null 
 
 	if (itemWithErr) {
 		return {
-			reason: getErrorString(EError.WRONG_TYPE, {
+			reason: getErrorString(ErrorType.WRONG_TYPE, {
 				section: Meta.SectionTitle.SONG,
 				item: itemWithErr,
 				expected: Meta.TNumber(),
@@ -228,7 +228,7 @@ function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null 
 	return null
 }
 
-function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][], content: Meta.Item[]): null | IError {
+function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][], content: Meta.Item[]): null | ErrorObject {
 	let literalValues: string[] = []
 	const tupleItemMap = literalTuples.map(tuple => ({
 		tuple,
@@ -238,7 +238,7 @@ function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][]
 		for (const item of ti.items) {
 			if (!isValidLiteral(item.values, ti.tuple[1])) {
 				return {
-					reason: getErrorString(EError.WRONG_TYPE, {
+					reason: getErrorString(ErrorType.WRONG_TYPE, {
 						section: Meta.SectionTitle.SONG,
 						item: item,
 						expected: Meta.TLiteral(literalValues),
@@ -251,11 +251,11 @@ function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][]
 	return null
 }
 
-function checkEventTypes(section: string, types: Meta.EventsSectionType[], content: Meta.Item[]): null | IError {
+function checkEventTypes(section: string, types: Meta.EventsSectionType[], content: Meta.Item[]): null | ErrorObject {
 	const itemError = content.find(item => !isValidEventItem(item))
 	if (itemError) {
 		return {
-			reason: getErrorString(EError.INVALID_EVENT_ITEM, {
+			reason: getErrorString(ErrorType.INVALID_EVENT_ITEM, {
 				section,
 				item: itemError
 			})
@@ -269,7 +269,7 @@ function checkEventTypes(section: string, types: Meta.EventsSectionType[], conte
 		)
 		if (isRequired && relevantItems.length === 0) {
 			return {
-				reason: getErrorString(EError.MISSING_REQUIRED_EVENT, {
+				reason: getErrorString(ErrorType.MISSING_REQUIRED_EVENT, {
 					section: section,
 					eventKey: type[0]
 				})
@@ -279,7 +279,7 @@ function checkEventTypes(section: string, types: Meta.EventsSectionType[], conte
 			const eventValues = item.values.slice(1)
 			if (!isValidType(eventValues, expectedType)) {
 				return({
-					reason: getErrorString(EError.WRONG_TYPE, {
+					reason: getErrorString(ErrorType.WRONG_TYPE, {
 						section,
 						item: item,
 						expected: expectedType,
@@ -363,7 +363,7 @@ function isValidEventItem(item: Meta.Item) {
  * lyric and phrase_end events should be preceded by a phrase_start
  *
  */
-function checkLyricsPhrases(content: Meta.Item[]): IError | null {
+function checkLyricsPhrases(content: Meta.Item[]): ErrorObject | null {
 	let inPhrase = false
 	const errorItem = content.find(item => {
 		const eventType = item.values[0].value
@@ -391,7 +391,7 @@ function checkLyricsPhrases(content: Meta.Item[]): IError | null {
 	if(errorItem) {
 		const eventSubtype = getEventSubtype(errorItem)
 		return ({
-			reason: getErrorString(EError.WRONG_LYRICS, {
+			reason: getErrorString(ErrorType.WRONG_LYRICS, {
 				item: errorItem,
 				found: eventSubtype
 			})
@@ -401,7 +401,7 @@ function checkLyricsPhrases(content: Meta.Item[]): IError | null {
 	return null
 }
 
-function checkAnchorPairings(content: Meta.Item[]): IError | null {
+function checkAnchorPairings(content: Meta.Item[]): ErrorObject | null {
 	const ticks = groupBy(content, "key")
 	const ticksWithAnchor = Object.keys(ticks).filter(t =>
 		ticks[t].some(item =>
@@ -416,7 +416,7 @@ function checkAnchorPairings(content: Meta.Item[]): IError | null {
 	)
 	if (unpairedTick) {
 		return ({
-			reason: getErrorString(EError.UNPAIRED_ANCHOR, {
+			reason: getErrorString(ErrorType.UNPAIRED_ANCHOR, {
 				tick: parseInt(unpairedTick)
 			})
 		})
@@ -426,7 +426,7 @@ function checkAnchorPairings(content: Meta.Item[]): IError | null {
 
 }
 
-function checkGuitarNoteFlags(section: string, content: Meta.Item[]): IError | null {
+function checkGuitarNoteFlags(section: string, content: Meta.Item[]): ErrorObject | null {
 	const notes = content.filter(item => item.values[0].value === Meta.TrackKey.NOTE)
 	const ticks = groupBy(notes, "key")
 
@@ -443,7 +443,7 @@ function checkGuitarNoteFlags(section: string, content: Meta.Item[]): IError | n
 	return null
 }
 
-function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.Item[]}): IError | null {
+function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.Item[]}): ErrorObject | null {
 	const tickRepeatedEventError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		return itemsOnSameTick.find(itemA => {
@@ -460,7 +460,7 @@ function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.It
 	if (tickRepeatedEventError) {
 		const found = ticks[tickRepeatedEventError].map(item => item.values[1].value)
 		return ({
-			reason: getErrorString(EError.DUPLICATE_NOTE_EVENT, {
+			reason: getErrorString(ErrorType.DUPLICATE_NOTE_EVENT, {
 				section,
 				tick: parseInt(tickRepeatedEventError),
 				foundValues: found
@@ -471,7 +471,7 @@ function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.It
 	return null
 }
 
-function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.Item[]}): IError | null {
+function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.Item[]}): ErrorObject | null {
 	const flagError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		const tickIsFlagged = itemsOnSameTick.some(item =>{
@@ -495,7 +495,7 @@ function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.Item[]}): 
 	if (flagError) {
 		const found = ticks[flagError].map(item => item.values[1].value)
 		return ({
-			reason: getErrorString(EError.WRONG_NOTE_FLAG, {
+			reason: getErrorString(ErrorType.WRONG_NOTE_FLAG, {
 				section,
 				tick: parseInt(flagError),
 				foundValues: found

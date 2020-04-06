@@ -1,9 +1,9 @@
 import * as Meta from "./Meta";
-export interface IError {
+export interface ErrorObject {
     reason: string;
     location?: number;
 }
-export declare enum EError {
+export declare enum ErrorType {
     WRONG_SECTION_COUNT = 0,
     MISSING_ONE_OF = 1,
     MISSING_REQUIRED_ITEM = 2,
@@ -15,42 +15,42 @@ export declare enum EError {
     WRONG_NOTE_FLAG = 8,
     DUPLICATE_NOTE_EVENT = 9
 }
-interface IWrongSectionCountError {
+interface WrongSectionCountError {
     section: string;
 }
-interface IMissingOneOfError {
+interface MissingOneOfError {
     sections: string[];
 }
-interface IMissingItemError {
+interface MissingItemError {
     section: string;
     itemKey: Meta.ItemKey;
 }
-interface IMissingEventError {
+interface MissingEventError {
     section: string;
     eventKey: Meta.ItemEventKey;
 }
-interface IWrongTypeError {
+interface WrongTypeError {
     section: string;
     item: Meta.Item;
     expected: Meta.ValueType;
     found: Meta.ValueType;
 }
-interface IInvalidEventItemError {
+interface InvalidEventItemError {
     section: string;
     item: Meta.Item;
 }
-interface IUnpairedAnchorError {
+interface UnpairedAnchorError {
     tick: number;
 }
-interface IWrongLyricsError {
+interface WrongLyricsError {
     item: Meta.Item;
     found: string;
 }
-interface IWrongNoteFlagError {
+interface WrongNoteFlagError {
     section: string;
     tick: number;
     foundValues: string[];
 }
-declare type TErrorData = IWrongSectionCountError | IMissingOneOfError | IMissingItemError | IMissingEventError | IUnpairedAnchorError | IWrongTypeError | IInvalidEventItemError | IWrongLyricsError | IWrongNoteFlagError;
-export declare function getErrorString(kind: EError, errorData: TErrorData): string;
+declare type ErrorData = WrongSectionCountError | MissingOneOfError | MissingItemError | MissingEventError | UnpairedAnchorError | WrongTypeError | InvalidEventItemError | WrongLyricsError | WrongNoteFlagError;
+export declare function getErrorString(kind: ErrorType, errorData: ErrorData): string;
 export {};
