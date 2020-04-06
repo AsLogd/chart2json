@@ -1,31 +1,31 @@
-export declare type TChart = ISection[];
-export interface ISection {
+export declare type Chart = Section[];
+export interface Section {
     title: string;
-    content: IItem[];
+    content: Item[];
 }
-export interface IItem {
-    key: TKey;
-    values: IAtom[];
+export interface Item {
+    key: ItemKey;
+    values: Atom[];
 }
-export declare type TRawType = "number" | "string" | "literal";
-export interface IAtom {
-    type: TRawType;
+export declare type RawType = "number" | "string" | "literal";
+export interface Atom {
+    type: RawType;
     value: string;
     line: number;
     col: number;
 }
-export declare enum ESection {
+export declare enum SectionTitle {
     SONG = "Song",
     SYNC_TRACK = "SyncTrack",
     EVENTS = "Events"
 }
-export declare enum EDifficulty {
+export declare enum Difficulty {
     EASY = "Easy",
     MEDIUM = "Medium",
     HARD = "Hard",
     EXPERT = "Expert"
 }
-export declare enum EInstrument {
+export declare enum Instrument {
     SINGLE = "Single",
     DOUBLEGUITAR = "DoubleGuitar",
     DOUBLEBASS = "DoubleBass",
@@ -35,7 +35,7 @@ export declare enum EInstrument {
     GHLGUITAR = "GHLGuitar",
     GHLBASS = "GHLBass"
 }
-export declare enum EGuitarNoteEventType {
+export declare enum GuitarNoteEventType {
     LANE_1 = 0,
     LANE_2 = 1,
     LANE_3 = 2,
@@ -46,9 +46,9 @@ export declare enum EGuitarNoteEventType {
     OPEN = 7
 }
 export declare function getPossibleTrackNames(): string[];
-export declare type TTick = number;
-export declare type TKey = TTick | ESongKey;
-export declare enum ETypeKind {
+export declare type Tick = number;
+export declare type ItemKey = Tick | SongKey;
+export declare enum TypeKind {
     ERROR = 0,
     STRING = 1,
     NUMBER = 2,
@@ -56,43 +56,43 @@ export declare enum ETypeKind {
     TUPLE = 4,
     EITHER = 5
 }
-export interface IErrorType {
-    kind: ETypeKind.ERROR;
+export interface ErrorType {
+    kind: TypeKind.ERROR;
 }
-export interface IStringType {
-    kind: ETypeKind.STRING;
+export interface StringType {
+    kind: TypeKind.STRING;
 }
-export interface INumberType {
-    kind: ETypeKind.NUMBER;
+export interface NumberType {
+    kind: TypeKind.NUMBER;
 }
-export interface ILiteralType {
-    kind: ETypeKind.LITERAL;
+export interface LiteralType {
+    kind: TypeKind.LITERAL;
     values: string[];
 }
-export interface ITupleType {
-    kind: ETypeKind.TUPLE;
-    types: TValueType[];
+export interface TupleType {
+    kind: TypeKind.TUPLE;
+    types: ValueType[];
 }
-export interface IEitherType {
-    kind: ETypeKind.EITHER;
-    types: TValueType[];
+export interface EitherType {
+    kind: TypeKind.EITHER;
+    types: ValueType[];
 }
-export declare type TValueType = IErrorType | IStringType | INumberType | ILiteralType | ITupleType | IEitherType;
-export declare function FError(): IErrorType;
-export declare function FString(): IStringType;
-export declare function FNumber(): INumberType;
-export declare function FLiteral(values: string[]): ILiteralType;
-export declare function FTuple(types: TValueType[]): ITupleType;
-export declare function FEither(types: TValueType[]): IEitherType;
-export declare function typeFromRawValue(rawValue: IAtom[]): TValueType;
-export declare function typeToString(type: TValueType): string;
-export interface ISongTypes {
-    required?: ESongKey[];
-    string?: ESongKey[];
-    number?: ESongKey[];
-    literal?: [ESongKey, ILiteralType][];
+export declare type ValueType = ErrorType | StringType | NumberType | LiteralType | TupleType | EitherType;
+export declare function TError(): ErrorType;
+export declare function TString(): StringType;
+export declare function TNumber(): NumberType;
+export declare function TLiteral(values: string[]): LiteralType;
+export declare function TTuple(types: ValueType[]): TupleType;
+export declare function TEither(types: ValueType[]): EitherType;
+export declare function typeFromRawValue(rawValue: Atom[]): ValueType;
+export declare function typeToString(type: ValueType): string;
+export interface SongTypes {
+    required?: SongKey[];
+    string?: SongKey[];
+    number?: SongKey[];
+    literal?: [SongKey, LiteralType][];
 }
-export declare enum ESongKey {
+export declare enum SongKey {
     NAME = "Name",
     ARTIST = "Artist",
     ALBUM = "Album",
@@ -118,23 +118,23 @@ export declare enum ESongKey {
     KEYSSTREAM = "KeysStream",
     CROWDSTREAM = "CrowdStream"
 }
-export declare const SongTypes: ISongTypes;
-export declare type EItemEventKey = ESyncTrackKey | EEventsKey | ETrackKey;
-export declare function getEventKeyName(eventKey: EItemEventKey): "Event" | "BPM" | "Time Signature" | "Anchor" | undefined;
-export declare type TEventsSectionType = [EItemEventKey, TValueType, boolean];
-export declare enum ESyncTrackKey {
+export declare const SongTypes: SongTypes;
+export declare type ItemEventKey = SyncTrackKey | EventsKey | TrackKey;
+export declare function getEventKeyName(eventKey: ItemEventKey): "Event" | "BPM" | "Time Signature" | "Anchor" | undefined;
+export declare type EventsSectionType = [ItemEventKey, ValueType, boolean];
+export declare enum SyncTrackKey {
     BPM = "B",
     TIME_SIGNATURE = "TS",
     ANCHOR = "A"
 }
-export declare const SyncTrackTypes: TEventsSectionType[];
-export declare enum EEventsKey {
+export declare const SyncTrackTypes: EventsSectionType[];
+export declare enum EventsKey {
     EVENT = "E"
 }
-export declare const EventTypes: TEventsSectionType[];
-export declare enum ETrackKey {
+export declare const EventTypes: EventsSectionType[];
+export declare enum TrackKey {
     NOTE = "N",
     SPECIAL = "S",
     TRACK_EVENT = "E"
 }
-export declare const TrackTypes: TEventsSectionType[];
+export declare const TrackTypes: EventsSectionType[];

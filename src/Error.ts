@@ -13,6 +13,7 @@ export enum EError {
 	MISSING_REQUIRED_EVENT,
 	WRONG_TYPE,
 	INVALID_EVENT_ITEM,
+	UNPAIRED_ANCHOR,
 	WRONG_LYRICS,
 	WRONG_NOTE_FLAG,
 	DUPLICATE_NOTE_EVENT,
@@ -28,28 +29,33 @@ interface IMissingOneOfError {
 
 interface IMissingItemError {
 	section: string,
-	itemKey: Meta.TKey
+	itemKey: Meta.ItemKey
 }
 
 interface IMissingEventError {
 	section: string,
-	eventKey: Meta.EItemEventKey
+	eventKey: Meta.ItemEventKey
 }
 
 interface IWrongTypeError {
 	section: string,
-	item: Meta.IItem,
-	expected: Meta.TValueType,
-	found: Meta.TValueType
+	item: Meta.Item,
+	expected: Meta.ValueType,
+	found: Meta.ValueType
 }
 
 interface IInvalidEventItemError {
 	section: string,
-	item: Meta.IItem
+	item: Meta.Item
 }
 
+interface IUnpairedAnchorError {
+	tick: number
+}
+
+
 interface IWrongLyricsError {
-	item: Meta.IItem
+	item: Meta.Item
 	found: string
 }
 
@@ -64,6 +70,7 @@ type TErrorData =
 	| IMissingOneOfError
 	| IMissingItemError
 	| IMissingEventError
+	| IUnpairedAnchorError
 	| IWrongTypeError
 	| IInvalidEventItemError
 	| IWrongLyricsError
@@ -84,6 +91,8 @@ export function getErrorString(kind: EError, errorData: TErrorData): string {
 			return getWrongTypeError(errorData as IWrongTypeError)
 		case EError.INVALID_EVENT_ITEM:
 			return getInvalidEventItemError(errorData as IInvalidEventItemError)
+		case EError.UNPAIRED_ANCHOR:
+			return getUnpairedAnchorError(errorData as IUnpairedAnchorError)
 		case EError.WRONG_LYRICS:
 			return getWrongLyricsError(errorData as IWrongLyricsError)
 		case EError.WRONG_NOTE_FLAG:
@@ -114,6 +123,10 @@ function getMissingEventError(data: IMissingEventError) {
 	return `A required event { ${data.eventKey} (${name}) } has to appear at least once in section { ${data.section} }`
 }
 
+function getUnpairedAnchorError(data: IUnpairedAnchorError) {
+	return `Tick { ${data.tick} } has defined an Anchor but not a BPM event. All anchors should be paired with a BPM event`
+}
+
 function getWrongTypeError(data: IWrongTypeError) {
 	const line = data.item.values[0].line
 	return `Unexpected type found at line { ${line} } (section: ${data.section} key: ${data.item.key})
@@ -135,11 +148,11 @@ function getWrongLyricsError(data: IWrongLyricsError) {
 }
 
 function getWrongNoteFlagError(data: IWrongNoteFlagError) {
-	const flags = data.foundValues.map(flag => Meta.EGuitarNoteEventType[parseInt(flag)]).join(", ")
+	const flags = data.foundValues.map(flag => Meta.GuitarNoteEventType[parseInt(flag)]).join(", ")
 	return `Found flags { ${flags} } without notes in tick { ${data.tick} } in section { ${data.section} }.`
 }
 
 function getDuplicateNoteError(data: IWrongNoteFlagError) {
-	const events = data.foundValues.map(flag => Meta.EGuitarNoteEventType[parseInt(flag)]).join(", ")
+	const events = data.foundValues.map(flag => Meta.GuitarNoteEventType[parseInt(flag)]).join(", ")
 	return `Found duplicated events { ${events} } in tick { ${data.tick} } in section { ${data.section} }.`
 }

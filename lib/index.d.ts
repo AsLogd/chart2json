@@ -1,7 +1,5 @@
 import { Failable } from "./Failable";
-export interface Chart {
-    song: any;
-}
+import { Chart } from "./Chart";
 export interface ParseError {
     error: any;
 }

@@ -1,40 +1,40 @@
 
-export type TChart = ISection[]
+export type Chart = Section[]
 
-export interface ISection {
+export interface Section {
 	title: 	string
-	content:IItem[]
+	content:Item[]
 }
 
-export interface IItem {
-	key: 	TKey
-	values:	IAtom[]
+export interface Item {
+	key: 	ItemKey
+	values:	Atom[]
 }
 
-export type TRawType = "number" | "string"	| "literal"
+export type RawType = "number" | "string"	| "literal"
 
-export interface IAtom {
-	type: 	TRawType
+export interface Atom {
+	type: 	RawType
 	value:	string
 	line: 	number
 	col: 	number
 	//TODO: other values
 }
 
-export enum ESection {
+export enum SectionTitle {
 	SONG 		= "Song",
 	SYNC_TRACK 	= "SyncTrack",
 	EVENTS		= "Events"
 }
 
-export enum EDifficulty {
+export enum Difficulty {
 	EASY 	= "Easy",
 	MEDIUM 	= "Medium",
 	HARD 	= "Hard",
 	EXPERT 	= "Expert",
 }
 
-export enum EInstrument {
+export enum Instrument {
 	SINGLE 			= "Single",
 	DOUBLEGUITAR 	= "DoubleGuitar",
 	DOUBLEBASS 		= "DoubleBass",
@@ -45,7 +45,7 @@ export enum EInstrument {
 	GHLBASS 		= "GHLBass",
 }
 
-export enum EGuitarNoteEventType {
+export enum GuitarNoteEventType {
 	LANE_1 	= 0,
 	LANE_2 	= 1,
 	LANE_3 	= 2,
@@ -57,10 +57,10 @@ export enum EGuitarNoteEventType {
 }
 
 export function getPossibleTrackNames(): string[] {
-	return Object.keys(EDifficulty).map((dif) => {
-		return Object.keys(EInstrument).map(instr => {
+	return Object.keys(Difficulty).map((dif) => {
+		return Object.keys(Instrument).map(instr => {
 			//@ts-ignore weird stuff
-			return ""+EDifficulty[dif]+EInstrument[instr]
+			return ""+Difficulty[dif]+Instrument[instr]
 		})
 	}).flat() // requires node 12.4
 }
@@ -69,15 +69,15 @@ export function getPossibleTrackNames(): string[] {
 ///////////////
 //// Key Types
 ///////////////
-export type TTick = number
-export type TKey =
-	| TTick
-	| ESongKey
+export type Tick = number
+export type ItemKey =
+	| Tick
+	| SongKey
 
 ///////////////
 //// Value Types
 ///////////////
-export enum ETypeKind {
+export enum TypeKind {
 	ERROR,
 	STRING,
 	NUMBER,
@@ -86,112 +86,112 @@ export enum ETypeKind {
 	EITHER,
 }
 
-export interface IErrorType {
-	kind: ETypeKind.ERROR
+export interface ErrorType {
+	kind: TypeKind.ERROR
 }
 
-export interface IStringType {
-	kind: ETypeKind.STRING
+export interface StringType {
+	kind: TypeKind.STRING
 }
-export interface INumberType {
-	kind: ETypeKind.NUMBER
+export interface NumberType {
+	kind: TypeKind.NUMBER
 }
-export interface ILiteralType {
-	kind: ETypeKind.LITERAL
+export interface LiteralType {
+	kind: TypeKind.LITERAL
 	// List containing possible values
 	// (string literals, empty for 'any')
 	values: string[]
 }
-export interface ITupleType {
-	kind: ETypeKind.TUPLE
+export interface TupleType {
+	kind: TypeKind.TUPLE
 	// Tuple with types found in the specified order
-	types: TValueType[]
+	types: ValueType[]
 }
 
-export interface IEitherType {
-	kind: ETypeKind.EITHER
+export interface EitherType {
+	kind: TypeKind.EITHER
 	// Value will be either of these types
-	types: TValueType[]
+	types: ValueType[]
 }
 
-export type TValueType =
-	| IErrorType
-	| IStringType
-	| INumberType
-	| ILiteralType
-	| ITupleType
-	| IEitherType
+export type ValueType =
+	| ErrorType
+	| StringType
+	| NumberType
+	| LiteralType
+	| TupleType
+	| EitherType
 
-export function FError(): IErrorType {
+export function TError(): ErrorType {
 	return {
-		kind: ETypeKind.ERROR
+		kind: TypeKind.ERROR
 	}
 }
-export function FString(): IStringType {
+export function TString(): StringType {
 	return {
-		kind: ETypeKind.STRING
+		kind: TypeKind.STRING
 	}
 }
-export function FNumber(): INumberType {
+export function TNumber(): NumberType {
 	return {
-		kind: ETypeKind.NUMBER
+		kind: TypeKind.NUMBER
 	}
 }
 
-export function FLiteral(values: string[]): ILiteralType {
+export function TLiteral(values: string[]): LiteralType {
 	return {
-		kind: ETypeKind.LITERAL,
+		kind: TypeKind.LITERAL,
 		values
 	}
 }
-export function FTuple(types: TValueType[]): ITupleType {
+export function TTuple(types: ValueType[]): TupleType {
 	return {
-		kind: ETypeKind.TUPLE,
+		kind: TypeKind.TUPLE,
 		types
 	}
 }
-export function FEither(types: TValueType[]): IEitherType {
+export function TEither(types: ValueType[]): EitherType {
 	return {
-		kind: ETypeKind.EITHER,
+		kind: TypeKind.EITHER,
 		types
 	}
 }
-export function typeFromRawValue(rawValue: IAtom[]): TValueType {
+export function typeFromRawValue(rawValue: Atom[]): ValueType {
 	if (rawValue.length === 1) {
 		switch(rawValue[0].type) {
 			case "string":
-				return FString()
+				return TString()
 			case "number":
-				return FNumber()
+				return TNumber()
 			case "literal":
-				return FLiteral([rawValue[0].value as string])
+				return TLiteral([rawValue[0].value as string])
 		}
 	} else if (rawValue.length > 1) {
 		const tupleTypes = rawValue.map(atom => typeFromRawValue([atom]))
-		return FTuple(tupleTypes)
+		return TTuple(tupleTypes)
 	}
 
-	return FError()
+	return TError()
 }
 
-export function typeToString(type: TValueType): string {
+export function typeToString(type: ValueType): string {
 	// no default => error if not exhaustive
 	switch(type.kind) {
-		case ETypeKind.STRING:
+		case TypeKind.STRING:
 			return "String"
-		case ETypeKind.NUMBER:
+		case TypeKind.NUMBER:
 			return "Number"
-		case ETypeKind.LITERAL:
+		case TypeKind.LITERAL:
 			return `Literal<${ type.values.join(" | ") }>`
-		case ETypeKind.TUPLE: {
+		case TypeKind.TUPLE: {
 			const types = type.types.map(type => typeToString(type))
 			return `Tuple<[${ types.join(", ") }]>`
 		}
-		case ETypeKind.EITHER: {
+		case TypeKind.EITHER: {
 			const types = type.types.map(type => typeToString(type))
 			return `Either<[${ types.join(" | ") }]>`
 		}
-		case ETypeKind.ERROR:
+		case TypeKind.ERROR:
 			return `Error`
 	}
 
@@ -202,14 +202,14 @@ export function typeToString(type: TValueType): string {
 ///////////////
 
 // Easier to write this than a 'key=>type' map
-export interface ISongTypes {
-	required?	: ESongKey[]
-	string?		: ESongKey[]
-	number?		: ESongKey[]
-	literal?	: [ESongKey, ILiteralType][]
+export interface SongTypes {
+	required?	: SongKey[]
+	string?		: SongKey[]
+	number?		: SongKey[]
+	literal?	: [SongKey, LiteralType][]
 }
 
-export enum ESongKey {
+export enum SongKey {
 	NAME			= "Name",
 	ARTIST			= "Artist",
 	ALBUM			= "Album",
@@ -238,47 +238,47 @@ export enum ESongKey {
 	CROWDSTREAM		= "CrowdStream",
 }
 
-export const SongTypes: ISongTypes = {
+export const SongTypes: SongTypes = {
 	required: [
-		ESongKey.RESOLUTION
+		SongKey.RESOLUTION
 	],
 	string: [
-		ESongKey.NAME,	ESongKey.ARTIST,	ESongKey.ALBUM,
-		ESongKey.YEAR,	ESongKey.CHARTER,	ESongKey.GENRE,
-		ESongKey.MEDIATYPE,
+		SongKey.NAME,	SongKey.ARTIST,	SongKey.ALBUM,
+		SongKey.YEAR,	SongKey.CHARTER,	SongKey.GENRE,
+		SongKey.MEDIATYPE,
 		// Audio Streams
-		ESongKey.MUSICSTREAM, 	ESongKey.GUITARSTREAM,
-		ESongKey.RHYTHMSTREAM,	ESongKey.BASSSTREAM,
-		ESongKey.DRUMSTREAM,	ESongKey.DRUM2STREAM,
-		ESongKey.DRUM3STREAM,	ESongKey.DRUM4STREAM,
-		ESongKey.VOCALSTREAM,	ESongKey.KEYSSTREAM,
-		ESongKey.CROWDSTREAM,
+		SongKey.MUSICSTREAM, 	SongKey.GUITARSTREAM,
+		SongKey.RHYTHMSTREAM,	SongKey.BASSSTREAM,
+		SongKey.DRUMSTREAM,	SongKey.DRUM2STREAM,
+		SongKey.DRUM3STREAM,	SongKey.DRUM4STREAM,
+		SongKey.VOCALSTREAM,	SongKey.KEYSSTREAM,
+		SongKey.CROWDSTREAM,
 	],
 	number: [
-		ESongKey.OFFSET,		ESongKey.RESOLUTION,
-		ESongKey.PREVIEWSTART, 	ESongKey.PREVIEWEND,
-		ESongKey.DIFFICULTY
+		SongKey.OFFSET,		SongKey.RESOLUTION,
+		SongKey.PREVIEWSTART, 	SongKey.PREVIEWEND,
+		SongKey.DIFFICULTY
 	],
 	literal: [
-		[ESongKey.PLAYER2, FLiteral(["bass", "guitar"])]
+		[SongKey.PLAYER2, TLiteral(["bass", "guitar"])]
 	]
 }
 
 // The rest of sections use the 'Tick = Key Value' pattern
-export type EItemEventKey =
-	| ESyncTrackKey
-	| EEventsKey
-	| ETrackKey
+export type ItemEventKey =
+	| SyncTrackKey
+	| EventsKey
+	| TrackKey
 
-export function getEventKeyName(eventKey: EItemEventKey) {
+export function getEventKeyName(eventKey: ItemEventKey) {
 	switch(eventKey) {
-		case ESyncTrackKey.BPM:
+		case SyncTrackKey.BPM:
 			return "BPM"
-		case ESyncTrackKey.TIME_SIGNATURE:
+		case SyncTrackKey.TIME_SIGNATURE:
 			return "Time Signature"
-		case ESyncTrackKey.ANCHOR:
+		case SyncTrackKey.ANCHOR:
 			return "Anchor"
-		case EEventsKey.EVENT:
+		case EventsKey.EVENT:
 			return "Event"
 	}
 }
@@ -287,67 +287,67 @@ export function getEventKeyName(eventKey: EItemEventKey) {
  * Tuples of the 'Tick = Key Value' pattern
  * meaning [key, value, shouldAppearAtLeastOnce]
  */
-export type TEventsSectionType = [EItemEventKey, TValueType, boolean]
+export type EventsSectionType = [ItemEventKey, ValueType, boolean]
 
 // SyncTrack section
-export enum ESyncTrackKey {
+export enum SyncTrackKey {
 	BPM 			= "B",
 	TIME_SIGNATURE 	= "TS",
 	ANCHOR		 	= "A",
 }
 
-export const SyncTrackTypes: TEventsSectionType[] = [
-	[ESyncTrackKey.BPM,
-		FNumber(),
+export const SyncTrackTypes: EventsSectionType[] = [
+	[SyncTrackKey.BPM,
+		TNumber(),
 		true
 	],
-	[ESyncTrackKey.TIME_SIGNATURE,
+	[SyncTrackKey.TIME_SIGNATURE,
 		// One or two numbers
-		FEither([
-			FNumber(),
-			FTuple( [FNumber(), FNumber()] )
+		TEither([
+			TNumber(),
+			TTuple( [TNumber(), TNumber()] )
 		]),
 		true
 	],
-	[ESyncTrackKey.ANCHOR,
-		FNumber(),
+	[SyncTrackKey.ANCHOR,
+		TNumber(),
 		false
 	],
 ]
 
 // Events section
-export enum EEventsKey {
+export enum EventsKey {
 	EVENT = "E",
 }
 
-export const EventTypes: TEventsSectionType[] = [
-	[EEventsKey.EVENT, FString(), false],
+export const EventTypes: EventsSectionType[] = [
+	[EventsKey.EVENT, TString(), false],
 ]
 
 // Track sections
-export enum ETrackKey {
+export enum TrackKey {
 	NOTE 		= "N",
 	SPECIAL 	= "S",
 	TRACK_EVENT = "E"
 }
 
-export const TrackTypes: TEventsSectionType[] = [
-	[ETrackKey.NOTE,
-		FTuple([
-			FNumber(),
-			FNumber()
+export const TrackTypes: EventsSectionType[] = [
+	[TrackKey.NOTE,
+		TTuple([
+			TNumber(),
+			TNumber()
 		]),
 		true
 	],
-	[ETrackKey.SPECIAL,
-		FTuple([
-			FNumber(),
-			FNumber()
+	[TrackKey.SPECIAL,
+		TTuple([
+			TNumber(),
+			TNumber()
 		]),
 		false
 	],
-	[EEventsKey.EVENT,
-		FLiteral([]),
+	[EventsKey.EVENT,
+		TLiteral([]),
 		false
 	],
 ]

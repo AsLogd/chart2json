@@ -10,9 +10,10 @@ export declare enum EError {
     MISSING_REQUIRED_EVENT = 3,
     WRONG_TYPE = 4,
     INVALID_EVENT_ITEM = 5,
-    WRONG_LYRICS = 6,
-    WRONG_NOTE_FLAG = 7,
-    DUPLICATE_NOTE_EVENT = 8
+    UNPAIRED_ANCHOR = 6,
+    WRONG_LYRICS = 7,
+    WRONG_NOTE_FLAG = 8,
+    DUPLICATE_NOTE_EVENT = 9
 }
 interface IWrongSectionCountError {
     section: string;
@@ -22,24 +23,27 @@ interface IMissingOneOfError {
 }
 interface IMissingItemError {
     section: string;
-    itemKey: Meta.TKey;
+    itemKey: Meta.ItemKey;
 }
 interface IMissingEventError {
     section: string;
-    eventKey: Meta.EItemEventKey;
+    eventKey: Meta.ItemEventKey;
 }
 interface IWrongTypeError {
     section: string;
-    item: Meta.IItem;
-    expected: Meta.TValueType;
-    found: Meta.TValueType;
+    item: Meta.Item;
+    expected: Meta.ValueType;
+    found: Meta.ValueType;
 }
 interface IInvalidEventItemError {
     section: string;
-    item: Meta.IItem;
+    item: Meta.Item;
+}
+interface IUnpairedAnchorError {
+    tick: number;
 }
 interface IWrongLyricsError {
-    item: Meta.IItem;
+    item: Meta.Item;
     found: string;
 }
 interface IWrongNoteFlagError {
@@ -47,6 +51,6 @@ interface IWrongNoteFlagError {
     tick: number;
     foundValues: string[];
 }
-declare type TErrorData = IWrongSectionCountError | IMissingOneOfError | IMissingItemError | IMissingEventError | IWrongTypeError | IInvalidEventItemError | IWrongLyricsError | IWrongNoteFlagError;
+declare type TErrorData = IWrongSectionCountError | IMissingOneOfError | IMissingItemError | IMissingEventError | IUnpairedAnchorError | IWrongTypeError | IInvalidEventItemError | IWrongLyricsError | IWrongNoteFlagError;
 export declare function getErrorString(kind: EError, errorData: TErrorData): string;
 export {};

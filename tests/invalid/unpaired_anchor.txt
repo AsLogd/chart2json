@@ -5,6 +5,8 @@
 [SyncTrack]
 {
 	0 = B 120
+	0 = TS 4
+	1 = A 124124
 }
 [EasySingle]
 {

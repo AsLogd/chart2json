@@ -10,19 +10,19 @@ import * as Meta from "./Meta"
 /*
  * Performs a semantic check on a syntactically correct chart file
  */
-export default function semanticCheck(chart: Meta.TChart): null | IError {
+export default function semanticCheck(chart: Meta.Chart): null | IError {
 	return checkChart(chart)
 }
 
 /*
  * Returns null if the chart is valid. Otherwise returns an error
  */
-function checkChart(secs: Meta.ISection[]): null | IError {
+function checkChart(secs: Meta.Section[]): null | IError {
 	const trackNames = Meta.getPossibleTrackNames()
 
 	{ // Check required sections
 		const requiredSectionError = checkRequiredSections(secs,
-			[Meta.ESection.SONG, Meta.ESection.SYNC_TRACK],
+			[Meta.SectionTitle.SONG, Meta.SectionTitle.SYNC_TRACK],
 			trackNames,
 		)
 		if (requiredSectionError) {
@@ -32,7 +32,7 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 	}
 
 	{ // Check Song section
-		const songSection = getSection(secs, Meta.ESection.SONG)
+		const songSection = getSection(secs, Meta.SectionTitle.SONG)
 		const songSectionError = checkSongTypes(Meta.SongTypes, songSection.content)
 		if (songSectionError) {
 			return songSectionError
@@ -41,22 +41,26 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 	}
 
 	{ // Check SyncTrack section
-		const syncTrackSection = getSection(secs, Meta.ESection.SYNC_TRACK)
+		const syncTrackSection = getSection(secs, Meta.SectionTitle.SYNC_TRACK)
 		const syncTrackSectionError = checkEventTypes(
-			Meta.ESection.SYNC_TRACK,
+			Meta.SectionTitle.SYNC_TRACK,
 			Meta.SyncTrackTypes,
 			syncTrackSection.content
 		)
 		if (syncTrackSectionError) {
 			return syncTrackSectionError
 		}
+		const unpairedAnchorError = checkAnchorPairings(syncTrackSection.content)
+		if (unpairedAnchorError) {
+			return unpairedAnchorError
+		}
 	}
 
 	{ // Check Events section
-		const eventsSection = getOptionalSection(secs, Meta.ESection.EVENTS)
+		const eventsSection = getOptionalSection(secs, Meta.SectionTitle.EVENTS)
 		if (eventsSection) {
 			const eventsSectionTypeError = checkEventTypes(
-				Meta.ESection.EVENTS,
+				Meta.SectionTitle.EVENTS,
 				Meta.EventTypes,
 				eventsSection.content
 			)
@@ -84,7 +88,7 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 				return currentTrackSectionError
 			}
 			// Non-drums instruments have flags that require notes (tap and forced)
-			if (!name.includes(Meta.EInstrument.DRUMS)) {
+			if (!name.includes(Meta.Instrument.DRUMS)) {
 				const noteFlagsError = checkGuitarNoteFlags(name, currentTrackSection.content)
 				if(noteFlagsError) {
 					return noteFlagsError
@@ -97,7 +101,7 @@ function checkChart(secs: Meta.ISection[]): null | IError {
 
 }
 
-function checkRequiredSections(secs: Meta.ISection[], required: Meta.ESection[], oneOf: string[]): null | IError {
+function checkRequiredSections(secs: Meta.Section[], required: Meta.SectionTitle[], oneOf: string[]): null | IError {
 	const wrongCountSection = required.find(reqSec =>
 		!containsSectionExactlyOnce(secs, reqSec)
 	)
@@ -129,19 +133,19 @@ function checkRequiredSections(secs: Meta.ISection[], required: Meta.ESection[],
  * Gets the specified section
  * @pre The section should exist
  */
-function getSection(sections: Meta.ISection[], sectionName: Meta.ESection): Meta.ISection {
-	return sections.find(x => x.title === sectionName) as Meta.ISection
+function getSection(sections: Meta.Section[], sectionName: Meta.SectionTitle): Meta.Section {
+	return sections.find(x => x.title === sectionName) as Meta.Section
 }
 
-function getOptionalSection(sections: Meta.ISection[], sectionName: string): Meta.ISection | undefined {
+function getOptionalSection(sections: Meta.Section[], sectionName: string): Meta.Section | undefined {
 	return sections.find(x => x.title === sectionName)
 }
 
-function containsSectionExactlyOnce(sections: Meta.ISection[], sectionName: Meta.ESection) {
+function containsSectionExactlyOnce(sections: Meta.Section[], sectionName: Meta.SectionTitle) {
 	return sections.filter(x => x.title === sectionName).length === 1
 }
 
-function checkSongTypes(types: Meta.ISongTypes, content: Meta.IItem[]): null | IError {
+function checkSongTypes(types: Meta.SongTypes, content: Meta.Item[]): null | IError {
 	const {
 		required= [],
 		string 	= [],
@@ -169,7 +173,7 @@ function checkSongTypes(types: Meta.ISongTypes, content: Meta.IItem[]): null | I
 	return null
 }
 
-function checkSongRequiredItems(required: Meta.ESongKey[], content: Meta.IItem[]): null | IError {
+function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.Item[]): null | IError {
 	for (const reqItem of required) {
 		const isFound = content.some(item =>
 			item.key === reqItem
@@ -177,7 +181,7 @@ function checkSongRequiredItems(required: Meta.ESongKey[], content: Meta.IItem[]
 		if (!isFound) {
 			return {
 				reason: getErrorString(EError.MISSING_REQUIRED_ITEM, {
-					section: Meta.ESection.SONG,
+					section: Meta.SectionTitle.SONG,
 					itemKey: reqItem
 				})
 			}
@@ -186,7 +190,7 @@ function checkSongRequiredItems(required: Meta.ESongKey[], content: Meta.IItem[]
 	return null
 }
 
-function checkSongStringItems(keys: Meta.ESongKey[], content: Meta.IItem[]): null | IError {
+function checkSongStringItems(keys: Meta.SongKey[], content: Meta.Item[]): null | IError {
 	const strItems = content.filter(item =>
 		keys.some(key => item.key === key)
 	)
@@ -194,9 +198,9 @@ function checkSongStringItems(keys: Meta.ESongKey[], content: Meta.IItem[]): nul
 	if (itemWithErr) {
 		return {
 			reason: getErrorString(EError.WRONG_TYPE, {
-				section: Meta.ESection.SONG,
+				section: Meta.SectionTitle.SONG,
 				item: itemWithErr,
-				expected: Meta.FString(),
+				expected: Meta.TString(),
 				found: Meta.typeFromRawValue(itemWithErr.values)
 			})
 		}
@@ -205,7 +209,7 @@ function checkSongStringItems(keys: Meta.ESongKey[], content: Meta.IItem[]): nul
 	return null
 }
 
-function checkSongNumberItems(keys: Meta.ESongKey[], content: Meta.IItem[]): null | IError {
+function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null | IError {
 	const numItems = content.filter(item =>
 		keys.some(key => item.key === key)
 	)
@@ -214,9 +218,9 @@ function checkSongNumberItems(keys: Meta.ESongKey[], content: Meta.IItem[]): nul
 	if (itemWithErr) {
 		return {
 			reason: getErrorString(EError.WRONG_TYPE, {
-				section: Meta.ESection.SONG,
+				section: Meta.SectionTitle.SONG,
 				item: itemWithErr,
-				expected: Meta.FNumber(),
+				expected: Meta.TNumber(),
 				found: Meta.typeFromRawValue(itemWithErr.values)
 			})
 		}
@@ -224,7 +228,7 @@ function checkSongNumberItems(keys: Meta.ESongKey[], content: Meta.IItem[]): nul
 	return null
 }
 
-function checkSongLiteralItems(literalTuples: [Meta.ESongKey, Meta.ILiteralType][], content: Meta.IItem[]): null | IError {
+function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][], content: Meta.Item[]): null | IError {
 	let literalValues: string[] = []
 	const tupleItemMap = literalTuples.map(tuple => ({
 		tuple,
@@ -235,9 +239,9 @@ function checkSongLiteralItems(literalTuples: [Meta.ESongKey, Meta.ILiteralType]
 			if (!isValidLiteral(item.values, ti.tuple[1])) {
 				return {
 					reason: getErrorString(EError.WRONG_TYPE, {
-						section: Meta.ESection.SONG,
+						section: Meta.SectionTitle.SONG,
 						item: item,
-						expected: Meta.FLiteral(literalValues),
+						expected: Meta.TLiteral(literalValues),
 						found: Meta.typeFromRawValue(item.values)
 					})
 				}
@@ -247,7 +251,7 @@ function checkSongLiteralItems(literalTuples: [Meta.ESongKey, Meta.ILiteralType]
 	return null
 }
 
-function checkEventTypes(section: string, types: Meta.TEventsSectionType[], content: Meta.IItem[]): null | IError {
+function checkEventTypes(section: string, types: Meta.EventsSectionType[], content: Meta.Item[]): null | IError {
 	const itemError = content.find(item => !isValidEventItem(item))
 	if (itemError) {
 		return {
@@ -290,34 +294,34 @@ function checkEventTypes(section: string, types: Meta.TEventsSectionType[], cont
 	return null
 }
 
-function isValidType(values: Meta.IAtom[], type: Meta.TValueType): boolean {
+function isValidType(values: Meta.Atom[], type: Meta.ValueType): boolean {
 	switch(type.kind) {
-		case Meta.ETypeKind.NUMBER:
+		case Meta.TypeKind.NUMBER:
 			return isValidNumber(values)
-		case Meta.ETypeKind.STRING:
+		case Meta.TypeKind.STRING:
 			return isValidString(values)
-		case Meta.ETypeKind.LITERAL:
+		case Meta.TypeKind.LITERAL:
 			return isValidLiteral(values, type)
-		case Meta.ETypeKind.TUPLE:
+		case Meta.TypeKind.TUPLE:
 			return isValidTuple(values, type)
-		case Meta.ETypeKind.EITHER:
+		case Meta.TypeKind.EITHER:
 			return isValidEither(values, type)
-		case Meta.ETypeKind.ERROR:
+		case Meta.TypeKind.ERROR:
 			return false
 	}
 }
 
-function isValidNumber(values: Meta.IAtom[]): boolean {
+function isValidNumber(values: Meta.Atom[]): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "number"
 }
 
-function isValidString(values: Meta.IAtom[]): boolean {
+function isValidString(values: Meta.Atom[]): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "string"
 }
 
-function isValidLiteral(values: Meta.IAtom[], definition: Meta.ILiteralType): boolean {
+function isValidLiteral(values: Meta.Atom[], definition: Meta.LiteralType): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "literal"
 		&&	(
@@ -328,14 +332,14 @@ function isValidLiteral(values: Meta.IAtom[], definition: Meta.ILiteralType): bo
 		)
 }
 
-function isValidTuple(values: Meta.IAtom[], definition: Meta.ITupleType): boolean {
+function isValidTuple(values: Meta.Atom[], definition: Meta.TupleType): boolean {
 	return 	values.length > 0
 		&&	values.every((value, idx) =>
 			isValidType([value], definition.types[idx])
 		)
 }
 
-function isValidEither(values: Meta.IAtom[], definition: Meta.IEitherType): boolean {
+function isValidEither(values: Meta.Atom[], definition: Meta.EitherType): boolean {
 	return 	values.length > 0
 		&&	definition.types.some(type =>
 			isValidType(values, type)
@@ -345,7 +349,7 @@ function isValidEither(values: Meta.IAtom[], definition: Meta.IEitherType): bool
 /*
  * Check whether the key is a valid positive finite integer
  */
-function isValidEventItem(item: Meta.IItem) {
+function isValidEventItem(item: Meta.Item) {
 	const n = parseInt(""+item.key)
 	const hasValidItemKey = !isNaN(n) && isFinite(n) && n >= 0
 	const hasValidValueKey = item.values
@@ -359,11 +363,11 @@ function isValidEventItem(item: Meta.IItem) {
  * lyric and phrase_end events should be preceded by a phrase_start
  *
  */
-function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
+function checkLyricsPhrases(content: Meta.Item[]): IError | null {
 	let inPhrase = false
 	const errorItem = content.find(item => {
 		const eventType = item.values[0].value
-		if (eventType === Meta.EEventsKey.EVENT) {
+		if (eventType === Meta.EventsKey.EVENT) {
 			// We already checked that the event value is a string
 			const eventSubtype = getEventSubtype(item)
 			switch (eventSubtype) {
@@ -397,8 +401,33 @@ function checkLyricsPhrases(content: Meta.IItem[]): IError | null {
 	return null
 }
 
-function checkGuitarNoteFlags(section: string, content: Meta.IItem[]): IError | null {
-	const notes = content.filter(item => item.values[0].value === Meta.ETrackKey.NOTE)
+function checkAnchorPairings(content: Meta.Item[]): IError | null {
+	const ticks = groupBy(content, "key")
+	const ticksWithAnchor = Object.keys(ticks).filter(t =>
+		ticks[t].some(item =>
+			item.values[0].value === Meta.SyncTrackKey.ANCHOR
+		)
+	)
+
+	const unpairedTick = ticksWithAnchor.find(t =>
+		!ticks[t].some(item =>
+			item.values[0].value === Meta.SyncTrackKey.BPM
+		)
+	)
+	if (unpairedTick) {
+		return ({
+			reason: getErrorString(EError.UNPAIRED_ANCHOR, {
+				tick: parseInt(unpairedTick)
+			})
+		})
+	}
+
+	return null
+
+}
+
+function checkGuitarNoteFlags(section: string, content: Meta.Item[]): IError | null {
+	const notes = content.filter(item => item.values[0].value === Meta.TrackKey.NOTE)
 	const ticks = groupBy(notes, "key")
 
 	const repeatedError = checkRepeatedNoteEvent(section, ticks)
@@ -414,7 +443,7 @@ function checkGuitarNoteFlags(section: string, content: Meta.IItem[]): IError | 
 	return null
 }
 
-function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.IItem[]}): IError | null {
+function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.Item[]}): IError | null {
 	const tickRepeatedEventError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		return itemsOnSameTick.find(itemA => {
@@ -442,22 +471,22 @@ function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.II
 	return null
 }
 
-function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.IItem[]}): IError | null {
+function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.Item[]}): IError | null {
 	const flagError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		const tickIsFlagged = itemsOnSameTick.some(item =>{
 			const value = parseInt(item.values[1].value)
 			return (
-					value === Meta.EGuitarNoteEventType.FORCED
-				|| 	value === Meta.EGuitarNoteEventType.TAP
+					value === Meta.GuitarNoteEventType.FORCED
+				|| 	value === Meta.GuitarNoteEventType.TAP
 			)
 		})
 
 		const hasNotes = itemsOnSameTick.some(item =>{
 			const value = parseInt(item.values[1].value)
 			return (
-					value !== Meta.EGuitarNoteEventType.FORCED
-				&& 	value !== Meta.EGuitarNoteEventType.TAP
+					value !== Meta.GuitarNoteEventType.FORCED
+				&& 	value !== Meta.GuitarNoteEventType.TAP
 			)
 		})
 		const tickIsOk = !tickIsFlagged || hasNotes
@@ -480,7 +509,7 @@ function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.IItem[]}):
 /**
  * @pre values has to be a string
  */
-function getEventSubtype(item: Meta.IItem) {
+function getEventSubtype(item: Meta.Item) {
 	const eventValue = item.values[1].value as string
 	// Remove quotes, get first word in string
 	return eventValue.substr(1, eventValue.length-2).split(" ")[0]
