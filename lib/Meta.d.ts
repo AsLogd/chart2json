@@ -1,15 +1,15 @@
-export declare type Chart = Section[];
-export interface Section {
+export declare type ParsedChart = ParsedSection[];
+export interface ParsedSection {
     title: string;
-    content: Item[];
+    content: ParsedItem[];
 }
-export interface Item {
+export interface ParsedItem {
     key: ItemKey;
-    values: Atom[];
+    values: ParsedAtom[];
 }
-export declare type RawType = "number" | "string" | "literal";
-export interface Atom {
-    type: RawType;
+export declare type AtomType = "number" | "string" | "literal";
+export interface ParsedAtom {
+    type: AtomType;
     value: string;
     line: number;
     col: number;
@@ -84,7 +84,7 @@ export declare function TNumber(): NumberType;
 export declare function TLiteral(values: string[]): LiteralType;
 export declare function TTuple(types: ValueType[]): TupleType;
 export declare function TEither(types: ValueType[]): EitherType;
-export declare function typeFromRawValue(rawValue: Atom[]): ValueType;
+export declare function typeFromRawValue(rawValue: ParsedAtom[]): ValueType;
 export declare function typeToString(type: ValueType): string;
 export interface SongTypes {
     required?: SongKey[];

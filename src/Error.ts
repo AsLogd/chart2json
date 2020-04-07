@@ -39,14 +39,14 @@ interface MissingEventError {
 
 interface WrongTypeError {
 	section: string,
-	item: Meta.Item,
+	item: Meta.ParsedItem,
 	expected: Meta.ValueType,
 	found: Meta.ValueType
 }
 
 interface InvalidEventItemError {
 	section: string,
-	item: Meta.Item
+	item: Meta.ParsedItem
 }
 
 interface UnpairedAnchorError {
@@ -55,7 +55,7 @@ interface UnpairedAnchorError {
 
 
 interface WrongLyricsError {
-	item: Meta.Item
+	item: Meta.ParsedItem
 	found: string
 }
 

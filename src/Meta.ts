@@ -1,20 +1,20 @@
 
-export type Chart = Section[]
+export type ParsedChart = ParsedSection[]
 
-export interface Section {
+export interface ParsedSection {
 	title: 	string
-	content:Item[]
+	content:ParsedItem[]
 }
 
-export interface Item {
+export interface ParsedItem {
 	key: 	ItemKey
-	values:	Atom[]
+	values:	ParsedAtom[]
 }
 
-export type RawType = "number" | "string"	| "literal"
+export type AtomType = "number" | "string"	| "literal"
 
-export interface Atom {
-	type: 	RawType
+export interface ParsedAtom {
+	type: 	AtomType
 	value:	string
 	line: 	number
 	col: 	number
@@ -156,7 +156,7 @@ export function TEither(types: ValueType[]): EitherType {
 		types
 	}
 }
-export function typeFromRawValue(rawValue: Atom[]): ValueType {
+export function typeFromRawValue(rawValue: ParsedAtom[]): ValueType {
 	if (rawValue.length === 1) {
 		switch(rawValue[0].type) {
 			case "string":

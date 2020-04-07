@@ -10,14 +10,14 @@ import * as Meta from "./Meta"
 /*
  * Performs a semantic check on a syntactically correct chart file
  */
-export default function semanticCheck(chart: Meta.Chart): null | ErrorObject {
+export default function semanticCheck(chart: Meta.ParsedChart): null | ErrorObject {
 	return checkChart(chart)
 }
 
 /*
  * Returns null if the chart is valid. Otherwise returns an error
  */
-function checkChart(secs: Meta.Section[]): null | ErrorObject {
+function checkChart(secs: Meta.ParsedSection[]): null | ErrorObject {
 	const trackNames = Meta.getPossibleTrackNames()
 
 	{ // Check required sections
@@ -101,7 +101,7 @@ function checkChart(secs: Meta.Section[]): null | ErrorObject {
 
 }
 
-function checkRequiredSections(secs: Meta.Section[], required: Meta.SectionTitle[], oneOf: string[]): null | ErrorObject {
+function checkRequiredSections(secs: Meta.ParsedSection[], required: Meta.SectionTitle[], oneOf: string[]): null | ErrorObject {
 	const wrongCountSection = required.find(reqSec =>
 		!containsSectionExactlyOnce(secs, reqSec)
 	)
@@ -133,19 +133,19 @@ function checkRequiredSections(secs: Meta.Section[], required: Meta.SectionTitle
  * Gets the specified section
  * @pre The section should exist
  */
-function getSection(sections: Meta.Section[], sectionName: Meta.SectionTitle): Meta.Section {
-	return sections.find(x => x.title === sectionName) as Meta.Section
+function getSection(sections: Meta.ParsedSection[], sectionName: Meta.SectionTitle): Meta.ParsedSection {
+	return sections.find(x => x.title === sectionName) as Meta.ParsedSection
 }
 
-function getOptionalSection(sections: Meta.Section[], sectionName: string): Meta.Section | undefined {
+function getOptionalSection(sections: Meta.ParsedSection[], sectionName: string): Meta.ParsedSection | undefined {
 	return sections.find(x => x.title === sectionName)
 }
 
-function containsSectionExactlyOnce(sections: Meta.Section[], sectionName: Meta.SectionTitle) {
+function containsSectionExactlyOnce(sections: Meta.ParsedSection[], sectionName: Meta.SectionTitle) {
 	return sections.filter(x => x.title === sectionName).length === 1
 }
 
-function checkSongTypes(types: Meta.SongTypes, content: Meta.Item[]): null | ErrorObject {
+function checkSongTypes(types: Meta.SongTypes, content: Meta.ParsedItem[]): null | ErrorObject {
 	const {
 		required= [],
 		string 	= [],
@@ -173,7 +173,7 @@ function checkSongTypes(types: Meta.SongTypes, content: Meta.Item[]): null | Err
 	return null
 }
 
-function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.Item[]): null | ErrorObject {
+function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.ParsedItem[]): null | ErrorObject {
 	for (const reqItem of required) {
 		const isFound = content.some(item =>
 			item.key === reqItem
@@ -190,7 +190,7 @@ function checkSongRequiredItems(required: Meta.SongKey[], content: Meta.Item[]):
 	return null
 }
 
-function checkSongStringItems(keys: Meta.SongKey[], content: Meta.Item[]): null | ErrorObject {
+function checkSongStringItems(keys: Meta.SongKey[], content: Meta.ParsedItem[]): null | ErrorObject {
 	const strItems = content.filter(item =>
 		keys.some(key => item.key === key)
 	)
@@ -209,7 +209,7 @@ function checkSongStringItems(keys: Meta.SongKey[], content: Meta.Item[]): null 
 	return null
 }
 
-function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null | ErrorObject {
+function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.ParsedItem[]): null | ErrorObject {
 	const numItems = content.filter(item =>
 		keys.some(key => item.key === key)
 	)
@@ -228,7 +228,7 @@ function checkSongNumberItems(keys: Meta.SongKey[], content: Meta.Item[]): null 
 	return null
 }
 
-function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][], content: Meta.Item[]): null | ErrorObject {
+function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][], content: Meta.ParsedItem[]): null | ErrorObject {
 	let literalValues: string[] = []
 	const tupleItemMap = literalTuples.map(tuple => ({
 		tuple,
@@ -251,7 +251,7 @@ function checkSongLiteralItems(literalTuples: [Meta.SongKey, Meta.LiteralType][]
 	return null
 }
 
-function checkEventTypes(section: string, types: Meta.EventsSectionType[], content: Meta.Item[]): null | ErrorObject {
+function checkEventTypes(section: string, types: Meta.EventsSectionType[], content: Meta.ParsedItem[]): null | ErrorObject {
 	const itemError = content.find(item => !isValidEventItem(item))
 	if (itemError) {
 		return {
@@ -294,7 +294,7 @@ function checkEventTypes(section: string, types: Meta.EventsSectionType[], conte
 	return null
 }
 
-function isValidType(values: Meta.Atom[], type: Meta.ValueType): boolean {
+function isValidType(values: Meta.ParsedAtom[], type: Meta.ValueType): boolean {
 	switch(type.kind) {
 		case Meta.TypeKind.NUMBER:
 			return isValidNumber(values)
@@ -311,17 +311,17 @@ function isValidType(values: Meta.Atom[], type: Meta.ValueType): boolean {
 	}
 }
 
-function isValidNumber(values: Meta.Atom[]): boolean {
+function isValidNumber(values: Meta.ParsedAtom[]): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "number"
 }
 
-function isValidString(values: Meta.Atom[]): boolean {
+function isValidString(values: Meta.ParsedAtom[]): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "string"
 }
 
-function isValidLiteral(values: Meta.Atom[], definition: Meta.LiteralType): boolean {
+function isValidLiteral(values: Meta.ParsedAtom[], definition: Meta.LiteralType): boolean {
 	return 	values.length === 1
 		&& 	values[0].type === "literal"
 		&&	(
@@ -332,14 +332,14 @@ function isValidLiteral(values: Meta.Atom[], definition: Meta.LiteralType): bool
 		)
 }
 
-function isValidTuple(values: Meta.Atom[], definition: Meta.TupleType): boolean {
+function isValidTuple(values: Meta.ParsedAtom[], definition: Meta.TupleType): boolean {
 	return 	values.length > 0
 		&&	values.every((value, idx) =>
 			isValidType([value], definition.types[idx])
 		)
 }
 
-function isValidEither(values: Meta.Atom[], definition: Meta.EitherType): boolean {
+function isValidEither(values: Meta.ParsedAtom[], definition: Meta.EitherType): boolean {
 	return 	values.length > 0
 		&&	definition.types.some(type =>
 			isValidType(values, type)
@@ -349,7 +349,7 @@ function isValidEither(values: Meta.Atom[], definition: Meta.EitherType): boolea
 /*
  * Check whether the key is a valid positive finite integer
  */
-function isValidEventItem(item: Meta.Item) {
+function isValidEventItem(item: Meta.ParsedItem) {
 	const n = parseInt(""+item.key)
 	const hasValidItemKey = !isNaN(n) && isFinite(n) && n >= 0
 	const hasValidValueKey = item.values
@@ -363,7 +363,7 @@ function isValidEventItem(item: Meta.Item) {
  * lyric and phrase_end events should be preceded by a phrase_start
  *
  */
-function checkLyricsPhrases(content: Meta.Item[]): ErrorObject | null {
+function checkLyricsPhrases(content: Meta.ParsedItem[]): ErrorObject | null {
 	let inPhrase = false
 	const errorItem = content.find(item => {
 		const eventType = item.values[0].value
@@ -401,7 +401,7 @@ function checkLyricsPhrases(content: Meta.Item[]): ErrorObject | null {
 	return null
 }
 
-function checkAnchorPairings(content: Meta.Item[]): ErrorObject | null {
+function checkAnchorPairings(content: Meta.ParsedItem[]): ErrorObject | null {
 	const ticks = groupBy(content, "key")
 	const ticksWithAnchor = Object.keys(ticks).filter(t =>
 		ticks[t].some(item =>
@@ -426,7 +426,7 @@ function checkAnchorPairings(content: Meta.Item[]): ErrorObject | null {
 
 }
 
-function checkGuitarNoteFlags(section: string, content: Meta.Item[]): ErrorObject | null {
+function checkGuitarNoteFlags(section: string, content: Meta.ParsedItem[]): ErrorObject | null {
 	const notes = content.filter(item => item.values[0].value === Meta.TrackKey.NOTE)
 	const ticks = groupBy(notes, "key")
 
@@ -443,7 +443,7 @@ function checkGuitarNoteFlags(section: string, content: Meta.Item[]): ErrorObjec
 	return null
 }
 
-function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.Item[]}): ErrorObject | null {
+function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.ParsedItem[]}): ErrorObject | null {
 	const tickRepeatedEventError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		return itemsOnSameTick.find(itemA => {
@@ -471,7 +471,7 @@ function checkRepeatedNoteEvent(section: string, ticks: {[tick: string]: Meta.It
 	return null
 }
 
-function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.Item[]}): ErrorObject | null {
+function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.ParsedItem[]}): ErrorObject | null {
 	const flagError = Object.keys(ticks).find(tick => {
 		const itemsOnSameTick = ticks[tick]
 		const tickIsFlagged = itemsOnSameTick.some(item =>{
@@ -509,7 +509,7 @@ function checkNoteFlags(section: string, ticks: {[tick: string]: Meta.Item[]}): 
 /**
  * @pre values has to be a string
  */
-function getEventSubtype(item: Meta.Item) {
+function getEventSubtype(item: Meta.ParsedItem) {
 	const eventValue = item.values[1].value as string
 	// Remove quotes, get first word in string
 	return eventValue.substr(1, eventValue.length-2).split(" ")[0]
