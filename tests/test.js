@@ -1,17 +1,25 @@
 const fs = require('fs')
 const path = require('path')
+const glob = require("glob")
 const nearley = require("nearley")
 const grammar = require("../lib/grammar.js")
 const Log = require("../lib/Log.js").default
 const semanticCheck = require("../lib/Semantic.js").default
+const execSync = require('child_process').execSync;
+const spawn = require('child_process').spawn;
 
 const validFolder = path.join(__dirname, './valid/')
 const invalidFolder = path.join(__dirname, './invalid/')
+const rawInputFolder = path.join(__dirname, './parseRaw/')
+const rawOutputFolder = path.join(__dirname, './parseRawOutput/')
 
 function dumpTest(path, results) {
 	Log.info("Results for ("+path+"):")
 	Log.dump(results)
 }
+
+Log.info("========================")
+Log.info("--grammar and semantic--")
 
 Log.info("Testing valid inputs:")
 fs.readdirSync(validFolder).forEach(file => {
@@ -77,3 +85,33 @@ fs.readdirSync(invalidFolder).forEach(file => {
 	Log.error(" - "+testName+" - KO")
 	dumpTest(path, parser.results)
 });
+
+Log.info("==============")
+Log.info("--executable--")
+if (fs.existsSync(rawOutputFolder)) {
+	Log.info(`Removing existing output folder "${rawOutputFolder}"...`)
+	execSync(`rm -rf ${rawOutputFolder}`)
+}
+Log.info("Testing raw export:")
+const command = `chart2json.js -r -i ${rawInputFolder}*.in -o ${rawOutputFolder} -p "    "`
+Log.info(`Executing "${command}"...`, )
+Log.info( execSync(`./bin/${command}`).toString() )
+Log.info("Results:")
+const rawOutFiles = glob.sync(`${rawInputFolder}*.out`)
+for (const file of rawOutFiles) {
+	const fileNamePath = file.split(".").slice(0, -1).join(".")
+	const fileName = fileNamePath.split("/").pop()
+	const expectedOutput = fs.readFileSync(`${fileNamePath}.out`, 'utf8');
+	const actualOutput = fs.readFileSync(`${rawOutputFolder}${fileName}.json`, 'utf8');
+	if (expectedOutput !== actualOutput) {
+		Log.error(`\t- ${fileName} - KO:`)
+		spawn("diff", [
+			`${fileNamePath}.out`,
+			`${rawOutputFolder}${fileName}.json`
+		], { stdio: 'inherit' })
+		break
+	} else {
+		Log.ok(`\t- ${fileName} - OK`)
+	}
+}
+

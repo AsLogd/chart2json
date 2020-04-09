@@ -67,8 +67,8 @@ export default class Parser {
 		)
 	}
 	/*
-	static parse(text: string, semanticCheck?: boolean): Failable<Chart.Chart, ParseError> {
-		const parseResult = parseChart(text, semanticCheck)
+	static parse(text: string): Failable<Chart.Chart, ParseError> {
+		const parseResult = parseChart(text, true)
 		if (parseResult.tag === "failure") {
 			return parseResult
 		}

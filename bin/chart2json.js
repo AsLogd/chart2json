@@ -4,39 +4,77 @@ const path = require("path")
 const glob = require("glob")
 const Parser = require("../lib/index").default
 const Log = require("../lib/Log").default
+var ArgumentParser = require('argparse').ArgumentParser;
 
+var parser = new ArgumentParser({
+  version: '0.0.1',
+  addHelp:true,
+  description: "Example:\nchart2json -i folder/**/*.chart -o result/"
+});
+parser.addArgument(
+  [ '-i', '--input' ],
+  {
+    help: 'Input files (glob format)',
+    required: true
+  },
+);
+parser.addArgument(
+  [ '-o', '--output' ],
+  {
+    help: 'Output folder. Defaults to current directory',
+    defaultValue: "."
+  },
+);
+parser.addArgument(
+  [ '-r', '--raw' ],
+  {
+    help: 'Output with raw format. Basically an array of titles and contents',
+    defaultValue: false,
+    action: "storeTrue"
+  }
+);
+parser.addArgument(
+  [ '-s', '--skip' ],
+  {
+    help: 'Used with --raw, skips the semantic check (skip checking types for known sections and keys)',
+    defaultValue: false,
+    action: "storeTrue"
+  }
+);
+parser.addArgument(
+  [ '-p', '--prettify' ],
+  {
+    help: 'String used to prettify the JSON. If not set, no prettifycation is performed'
+  }
+);
+var args = parser.parseArgs();
 
-const outputIndex = process.argv.indexOf("-o")
-let output = "./"
-let fileNames
-if (outputIndex > -1) {
-	fileNames = process.argv.slice(2, outputIndex)
-	output = process.argv.slice(outputIndex)[1] + "/"
-} else {
-	fileNames = process.argv.slice(2)
+if (!args.raw && args.skip) {
+	console.error("Skip may only be used with --raw")
+	return
 }
 
-const files = fileNames
-	.map(x => glob.sync(x))
-	.reduce((pre, current) => pre.concat(current))
+const files = glob.sync(args.input)
 
 Log.info("Input files:")
 files.map(x => console.log('-'+x))
 
 Log.info("Parsing...")
-Log.info("ble")
 let parsed = 0
-files.map(filePath => {
-	Log.info("ble2"+filePath)
+files.forEach(filePath => {
 	const content = fs.readFileSync(filePath, 'utf8')
-	Log.info("ble3"+content)
-	const result = Parser.parse(content)
-	Log.info("ble4")
-	Log.dump(result)
+	const parser = Parser.parseRaw//args.raw ? Parser.parseRaw : Parser.parse
+	const check = !args.skip
+	const result = parser(content, check)
 	const baseName = path.basename(filePath, path.extname(filePath))
 	switch(result.tag) {
 		case "success":
-			fs.writeFileSync(output + baseName + ".json", JSON.stringify(result.value))
+			fs.mkdirSync(args.output, {recursive: true})
+			const outputPath = path.join(args.output, `${baseName}.json`)
+			const output = args.prettify
+				? JSON.stringify(result.value, null, args.prettify)
+				: JSON.stringify(result.value)
+			fs.writeFileSync(outputPath, output)
 			Log.ok(`	- ${filePath} - OK`)
 			parsed += 1
 			break
