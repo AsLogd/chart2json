@@ -2,17 +2,25 @@ import * as Meta from "./Meta";
 export declare type Difficulty = Meta.Difficulty;
 export declare type Instrument = Meta.Instrument;
 export declare type GuitarInstrument = Meta.Instrument.SINGLE | Meta.Instrument.DOUBLEGUITAR | Meta.Instrument.DOUBLEBASS | Meta.Instrument.DOUBLERHYTHM | Meta.Instrument.KEYBOARD;
+export declare function isGuitar(instrument: Meta.Instrument): instrument is GuitarInstrument;
 export declare type DrumsInstrument = Meta.Instrument.DRUMS;
+export declare function isDrums(instrument: Meta.Instrument): instrument is DrumsInstrument;
 export declare type GHLInstrument = Meta.Instrument.GHLGUITAR | Meta.Instrument.GHLBASS;
+export declare function isGHL(instrument: Meta.Instrument): instrument is GHLInstrument;
 export interface Chart {
     song: SongSection;
     syncTrack: SyncTrackSection;
     events?: EventsSection;
-    difficulties: {
-        [difficulty in Difficulty]: InstrumentTracks;
-    };
+    difficulties: Difficulties;
 }
-export interface SongSection {
+export declare type Difficulties = {
+    [difficulty in Difficulty]?: InstrumentTracks;
+};
+export declare type AudioStreams = {
+    [stream in AudioStream]?: string;
+};
+export declare type SongSection = {
+    audioStreams: AudioStreams;
     resolution: number;
     name?: string;
     artist?: string;
@@ -26,10 +34,7 @@ export interface SongSection {
     previewEnd?: string;
     genre?: string;
     mediaType?: string;
-    audioStreams?: {
-        [stream in AudioStream]: string;
-    };
-}
+};
 export declare enum AudioStream {
     MUSICSTREAM = "MusicStream",
     GUITARSTREAM = "GuitarStream",
@@ -47,35 +52,36 @@ export interface Tick<T> {
     events: T[];
 }
 export interface SyncTrackSection {
-    ticks: Tick<SyncTrackEvent>[];
+    [tick: number]: Tick<SyncTrackEvent>;
 }
-export declare type SyncTrackEvent = Bpm | TimeSignature | Anchor;
+export declare type SyncTrackEvent = Bpm | TimeSignature;
 export declare enum SyncTrackEventType {
     BPM = 0,
-    TIME_SIGNATURE = 1,
-    ANCHOR = 2
+    TIME_SIGNATURE = 1
 }
 export interface Bpm {
     kind: SyncTrackEventType.BPM;
     bpm: number;
+    anchorMicroSeconds?: number;
 }
 export interface TimeSignature {
     kind: SyncTrackEventType.TIME_SIGNATURE;
-    signature: [number, number];
+    signature: Signature;
 }
-export interface Anchor {
-    kind: SyncTrackEventType.ANCHOR;
-    microSeconds: number;
+export interface Signature {
+    numerator: number;
+    denominator: number;
 }
 export interface EventsSection {
-    ticks: Tick<EventsEvent>[];
+    [tick: number]: Tick<EventsEvent>;
 }
-export declare type EventsEvent = SectionEvent | PhraseStart | Lyric | PhraseEnd;
+export declare type EventsEvent = SectionEvent | PhraseStart | Lyric | PhraseEnd | ValueEvent;
 export declare enum EventsEventType {
     SECTION = 0,
     PHRASE_START = 1,
     LYRIC = 2,
-    PHRASE_END = 3
+    PHRASE_END = 3,
+    VALUE_EVENT = 4
 }
 export interface SectionEvent {
     kind: EventsEventType.SECTION;
@@ -91,20 +97,21 @@ export interface Lyric {
     kind: EventsEventType.LYRIC;
     lyric: string;
 }
+export interface ValueEvent {
+    kind: EventsEventType.VALUE_EVENT;
+    value: string;
+}
 export declare type InstrumentTracks = {
-    [guitar in GuitarInstrument]: Track<GuitarNote>;
+    [guitar in GuitarInstrument]?: Track<StringNote<GuitarLane>>;
 } & {
-    [drums in DrumsInstrument]: Track<DrumsNote>;
+    [drums in DrumsInstrument]?: Track<DrumsNote>;
 } & {
-    [ghl in GHLInstrument]: Track<GHLNote>;
+    [ghl in GHLInstrument]?: Track<StringNote<GHLLane>>;
 };
 export interface Track<N> {
-    [tick: number]: Tick<TrackEvent<N>>[];
+    [tick: number]: Tick<TrackEvent<N>>;
 }
 export declare type TrackEvent<N> = N | SpecialEvent | LiteralEvent;
-export interface Note {
-    sustain: number;
-}
 export declare enum GuitarLane {
     OPEN = 0,
     LANE_1 = 1,
@@ -113,8 +120,12 @@ export declare enum GuitarLane {
     LANE_4 = 4,
     LANE_5 = 5
 }
-export interface GuitarNote extends Note {
-    lanes: GuitarLane[];
+export interface Lane<T> {
+    lane: T;
+    sustain: number;
+}
+export interface StringNote<T> {
+    lanes: Lane<T>[];
     forced: boolean;
     tap: boolean;
 }
@@ -126,8 +137,8 @@ export declare enum DrumsLane {
     CYMBAL_2 = 4,
     TOM_2 = 5
 }
-export interface DrumsNote extends Note {
-    lanes: DrumsLane[];
+export interface DrumsNote {
+    lanes: Lane<DrumsLane>[];
 }
 export declare enum GHLLane {
     OPEN = 0,
@@ -138,20 +149,16 @@ export declare enum GHLLane {
     BLACK_2 = 5,
     BLACK_3 = 6
 }
-export interface GHLNote extends Note {
-    lanes: GHLLane[];
-    forced: boolean;
-    tap: boolean;
-}
-export declare enum ESpecialEventType {
+export declare enum SpecialEventType {
     PLAYER1 = 0,
     PLAYER2 = 1,
     START_POWER = 2
 }
 export interface SpecialEvent {
-    type: ESpecialEventType;
+    type: SpecialEventType;
     duration: number;
 }
 export interface LiteralEvent {
     value: string;
 }
+export declare function fromParsedChart(pc: Meta.ParsedChart): Chart;

@@ -63,7 +63,7 @@ Log.info("Parsing...")
 let parsed = 0
 files.forEach(filePath => {
 	const content = fs.readFileSync(filePath, 'utf8')
-	const parser = Parser.parseRaw//args.raw ? Parser.parseRaw : Parser.parse
+	const parser = args.raw ? Parser.parseRaw : Parser.parse
 	const check = !args.skip
 	const result = parser(content, check)
 	const baseName = path.basename(filePath, path.extname(filePath))

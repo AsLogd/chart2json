@@ -12,7 +12,8 @@ const validFolder = path.join(__dirname, './valid/')
 const invalidFolder = path.join(__dirname, './invalid/')
 const rawInputFolder = path.join(__dirname, './parseRaw/')
 const rawOutputFolder = path.join(__dirname, './parseRawOutput/')
-
+const inputFolder = path.join(__dirname, './parse/')
+const outputFolder = path.join(__dirname, './parseOutput/')
 function dumpTest(path, results) {
 	Log.info("Results for ("+path+"):")
 	Log.dump(results)
@@ -88,30 +89,60 @@ fs.readdirSync(invalidFolder).forEach(file => {
 
 Log.info("==============")
 Log.info("--executable--")
-if (fs.existsSync(rawOutputFolder)) {
-	Log.info(`Removing existing output folder "${rawOutputFolder}"...`)
-	execSync(`rm -rf ${rawOutputFolder}`)
-}
-Log.info("Testing raw export:")
-const command = `chart2json.js -r -i ${rawInputFolder}*.in -o ${rawOutputFolder} -p "    "`
-Log.info(`Executing "${command}"...`, )
-Log.info( execSync(`./bin/${command}`).toString() )
-Log.info("Results:")
-const rawOutFiles = glob.sync(`${rawInputFolder}*.out`)
-for (const file of rawOutFiles) {
-	const fileNamePath = file.split(".").slice(0, -1).join(".")
-	const fileName = fileNamePath.split("/").pop()
-	const expectedOutput = fs.readFileSync(`${fileNamePath}.out`, 'utf8');
-	const actualOutput = fs.readFileSync(`${rawOutputFolder}${fileName}.json`, 'utf8');
-	if (expectedOutput !== actualOutput) {
-		Log.error(`\t- ${fileName} - KO:`)
-		spawn("diff", [
-			`${fileNamePath}.out`,
-			`${rawOutputFolder}${fileName}.json`
-		], { stdio: 'inherit' })
-		break
-	} else {
-		Log.ok(`\t- ${fileName} - OK`)
+{
+	if (fs.existsSync(rawOutputFolder)) {
+		Log.info(`Removing existing output folder "${rawOutputFolder}"...`)
+		execSync(`rm -rf ${rawOutputFolder}`)
+	}
+	Log.info("Testing raw export:")
+	const command = `chart2json.js -r -i ${rawInputFolder}*.in -o ${rawOutputFolder} -p '    '`
+	Log.info(`Executing "${command}"...`, )
+	Log.info( execSync(`./bin/${command}`).toString() )
+	Log.info("Results:")
+	const rawOutFiles = glob.sync(`${rawInputFolder}*.out`)
+	for (const file of rawOutFiles) {
+		const fileNamePath = file.split(".").slice(0, -1).join(".")
+		const fileName = fileNamePath.split("/").pop()
+		const expectedOutput = fs.readFileSync(`${fileNamePath}.out`, 'utf8');
+		const actualOutput = fs.readFileSync(`${rawOutputFolder}${fileName}.json`, 'utf8');
+		if (expectedOutput !== actualOutput) {
+			Log.error(`\t- ${fileName} - KO:`)
+			spawn("diff", [
+				`${fileNamePath}.out`,
+				`${rawOutputFolder}${fileName}.json`
+			], { stdio: 'inherit' })
+			break
+		} else {
+			Log.ok(`\t- ${fileName} - OK`)
+		}
 	}
 }
+{
+	if (fs.existsSync(outputFolder)) {
+		Log.info(`Removing existing output folder "${outputFolder}"...`)
+		execSync(`rm -rf ${outputFolder}`)
+	}
+	Log.info("Testing export:")
+	const command = `chart2json.js -i ${inputFolder}*.in -o ${outputFolder} -p '    '`
+	Log.info(`Executing "${command}"...`, )
+	Log.info( execSync(`./bin/${command}`).toString() )
+	Log.info("Results:")
+	const outFiles = glob.sync(`${inputFolder}*.out`)
+	for (const file of outFiles) {
+		const fileNamePath = file.split(".").slice(0, -1).join(".")
+		const fileName = fileNamePath.split("/").pop()
+		const expectedOutput = fs.readFileSync(`${fileNamePath}.out`, 'utf8');
+		const actualOutput = fs.readFileSync(`${outputFolder}${fileName}.json`, 'utf8');
+		if (expectedOutput !== actualOutput) {
+			Log.error(`\t- ${fileName} - KO:`)
+			spawn("diff", [
+				`${fileNamePath}.out`,
+				`${outputFolder}${fileName}.json`
+			], { stdio: 'inherit' })
+			break
+		} else {
+			Log.ok(`\t- ${fileName} - OK`)
+		}
+	}
 
+}

@@ -5,6 +5,7 @@ import {
 } from "./Error"
 
 import * as Meta from "./Meta"
+import * as Util from "./Util"
 
 
 /*
@@ -402,7 +403,7 @@ function checkLyricsPhrases(content: Meta.ParsedItem[]): ErrorObject | null {
 }
 
 function checkAnchorPairings(content: Meta.ParsedItem[]): ErrorObject | null {
-	const ticks = groupBy(content, "key")
+	const ticks = Util.groupBy(content, "key")
 	const ticksWithAnchor = Object.keys(ticks).filter(t =>
 		ticks[t].some(item =>
 			item.values[0].value === Meta.SyncTrackKey.ANCHOR
@@ -428,7 +429,7 @@ function checkAnchorPairings(content: Meta.ParsedItem[]): ErrorObject | null {
 
 function checkGuitarNoteFlags(section: string, content: Meta.ParsedItem[]): ErrorObject | null {
 	const notes = content.filter(item => item.values[0].value === Meta.TrackKey.NOTE)
-	const ticks = groupBy(notes, "key")
+	const ticks = Util.groupBy(notes, "key")
 
 	const repeatedError = checkRepeatedNoteEvent(section, ticks)
 	if (repeatedError) {
@@ -513,18 +514,4 @@ function getEventSubtype(item: Meta.ParsedItem) {
 	const eventValue = item.values[1].value as string
 	// Remove quotes, get first word in string
 	return eventValue.substr(1, eventValue.length-2).split(" ")[0]
-}
-
-// Util
-// Groups a list of objects by the value of a given key
-export function groupBy<T extends any>(list: T[], key: string): {[key: string]: T[]} {
-	const groups:{[key: string]: T[]} = {}
-	list.forEach(e => {
-		if(!groups[e[key]]) {
-			groups[e[key]] = [e]
-		} else {
-			groups[e[key]].push(e)
-		}
-	})
-	return groups
 }

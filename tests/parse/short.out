@@ -1,0 +1,246 @@
+{
+    "song": {
+        "resolution": 192,
+        "audioStreams": {
+            "MusicStream": "song.ogg"
+        },
+        "name": "At Doom's Gate",
+        "artist": "Mick Gordon",
+        "charter": "Shankocity",
+        "year": ", 2016",
+        "offset": "",
+        "player2": "as",
+        "difficulty": "",
+        "previewStart": "",
+        "previewEnd": "",
+        "genre": "Hell",
+        "mediaType": "cd"
+    },
+    "syncTrack": {
+        "0": {
+            "events": [
+                {
+                    "kind": 1,
+                    "signature": {
+                        "numerator": 4,
+                        "denominator": 4
+                    }
+                },
+                {
+                    "kind": 0,
+                    "bpm": 146000
+                }
+            ]
+        },
+        "768": {
+            "events": [
+                {
+                    "kind": 0,
+                    "bpm": 148000
+                }
+            ]
+        },
+        "1536": {
+            "events": [
+                {
+                    "kind": 0,
+                    "bpm": 161000
+                }
+            ]
+        }
+    },
+    "difficulties": {
+        "Expert": {
+            "Single": {
+                "1536": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 0,
+                                    "sustain": 2688
+                                }
+                            ],
+                            "forced": false,
+                            "tap": false
+                        },
+                        {
+                            "type": 2,
+                            "duration": 3168
+                        }
+                    ]
+                },
+                "4608": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 0,
+                                    "sustain": 3072
+                                }
+                            ],
+                            "forced": false,
+                            "tap": false
+                        }
+                    ]
+                },
+                "8832": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 1,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "8928": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 2,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9024": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 3,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9120": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 4,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9216": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 5,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9264": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 4,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9312": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 3,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9360": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 2,
+                                    "sustain": 0
+                                }
+                            ],
+                            "forced": false,
+                            "tap": true
+                        }
+                    ]
+                },
+                "9362": {
+                    "events": [
+                        {
+                            "lanes": [
+                                {
+                                    "lane": 2,
+                                    "sustain": 5
+                                },
+                                {
+                                    "lane": 3,
+                                    "sustain": 10
+                                }
+                            ],
+                            "forced": false,
+                            "tap": false
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "events": {
+        "1536": {
+            "events": [
+                {
+                    "kind": 0,
+                    "name": "6"
+                }
+            ]
+        },
+        "13824": {
+            "events": [
+                {
+                    "kind": 0,
+                    "name": "6"
+                }
+            ]
+        },
+        "23040": {
+            "events": [
+                {
+                    "kind": 0,
+                    "name": "6"
+                }
+            ]
+        }
+    }
+}

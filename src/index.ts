@@ -66,7 +66,7 @@ export default class Parser {
 			RawChart.fromParsedChart(parseResult.value)
 		)
 	}
-	/*
+
 	static parse(text: string): Failable<Chart.Chart, ParseError> {
 		const parseResult = parseChart(text, true)
 		if (parseResult.tag === "failure") {
@@ -77,5 +77,4 @@ export default class Parser {
 			Chart.fromParsedChart(parseResult.value)
 		)
 	}
-	*/
 }

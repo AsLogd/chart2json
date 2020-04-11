@@ -53,7 +53,28 @@ export enum GuitarNoteEventType {
 	LANE_5 	= 4,
 	FORCED 	= 5,
 	TAP		= 6,
-	OPEN	= 7
+	OPEN	= 7,
+}
+
+export enum GhlNoteEventType {
+	WHITE_1 = 0,
+	WHITE_2 = 1,
+	WHITE_3	= 2,
+	BLACK_1	= 3,
+	BLACK_2 = 4,
+	FORCED 	= 5,
+	TAP		= 6,
+	OPEN	= 7,
+	BLACK_3 = 8
+}
+
+export enum DrumsNoteEventType {
+	OPEN	= 0,
+	LANE_1 	= 1,
+	LANE_2 	= 2,
+	LANE_3 	= 3,
+	LANE_4 	= 4,
+	LANE_5 	= 5,
 }
 
 export function getPossibleTrackNames(): string[] {
