@@ -40,7 +40,7 @@ function executeParser(text: string): Failable<Meta.ParsedChart, ParseError> {
 function parseChart(text: string, semanticCheck?: boolean): Failable<Meta.ParsedChart, ParseError> {
 	const shouldCheckSemantics = semanticCheck !== undefined ? semanticCheck : false
 	const parseResult = executeParser(text)
-	if (parseResult.tag === "failure") {
+	if (!parseResult.ok) {
 		return parseResult
 	}
 
@@ -58,7 +58,7 @@ function parseChart(text: string, semanticCheck?: boolean): Failable<Meta.Parsed
 export default class Parser {
 	static parseRaw(text: string, semanticCheck?: boolean): Failable<RawChart.RawChart, ParseError> {
 		const parseResult = parseChart(text, semanticCheck)
-		if (parseResult.tag === "failure") {
+		if (!parseResult.ok) {
 			return parseResult
 		}
 
@@ -69,7 +69,7 @@ export default class Parser {
 
 	static parse(text: string): Failable<Chart.Chart, ParseError> {
 		const parseResult = parseChart(text, true)
-		if (parseResult.tag === "failure") {
+		if (!parseResult.ok) {
 			return parseResult
 		}
 

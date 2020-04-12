@@ -1,23 +1,23 @@
 export type Success<T> = {
-	tag: "success"
+	ok: true
 	value: T
 }
 
 export type Failure<E> = {
-	tag: "failure"
+	ok: false
 	reason: E
 }
 
 export function Success<T>(value: T): Success<T> {
 	return {
-		tag: "success",
+		ok: true as true,
 		value
 	}
 }
 
 export function Failure<E>(reason: E): Failure<E> {
 	return {
-		tag: "failure",
+		ok: false as false,
 		reason
 	}
 }
