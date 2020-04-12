@@ -7,12 +7,12 @@
         "name": "At Doom's Gate",
         "artist": "Mick Gordon",
         "charter": "Shankocity",
-        "year": ", 2016",
-        "offset": "",
-        "player2": "as",
-        "difficulty": "",
-        "previewStart": "",
-        "previewEnd": "",
+        "year": 2016,
+        "offset": 0,
+        "player2": "bass",
+        "difficulty": 6,
+        "previewStart": 0,
+        "previewEnd": 0,
         "genre": "Hell",
         "mediaType": "cd"
     },
@@ -28,7 +28,7 @@
                 },
                 {
                     "kind": 0,
-                    "bpm": 146000
+                    "bpm": 146
                 }
             ]
         },
@@ -36,7 +36,7 @@
             "events": [
                 {
                     "kind": 0,
-                    "bpm": 148000
+                    "bpm": 148
                 }
             ]
         },
@@ -44,7 +44,7 @@
             "events": [
                 {
                     "kind": 0,
-                    "bpm": 161000
+                    "bpm": 161
                 }
             ]
         }

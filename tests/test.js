@@ -11,9 +11,9 @@ const spawn = require('child_process').spawn;
 const validFolder = path.join(__dirname, './valid/')
 const invalidFolder = path.join(__dirname, './invalid/')
 const rawInputFolder = path.join(__dirname, './parseRaw/')
-const rawOutputFolder = path.join(__dirname, './parseRawOutput/')
+const rawOutputFolder = path.join(__dirname, './output/parseRaw/')
 const inputFolder = path.join(__dirname, './parse/')
-const outputFolder = path.join(__dirname, './parseOutput/')
+const outputFolder = path.join(__dirname, './output/parse/')
 function dumpTest(path, results) {
 	Log.info("Results for ("+path+"):")
 	Log.dump(results)

@@ -25,15 +25,15 @@ export declare type SongSection = {
     name?: string;
     artist?: string;
     album?: string;
-    year?: string;
     charter?: string;
-    offset?: string;
     player2?: string;
-    difficulty?: string;
-    previewStart?: string;
-    previewEnd?: string;
     genre?: string;
     mediaType?: string;
+    year?: number;
+    offset?: number;
+    difficulty?: number;
+    previewStart?: number;
+    previewEnd?: number;
 };
 export declare enum AudioStream {
     MUSICSTREAM = "MusicStream",

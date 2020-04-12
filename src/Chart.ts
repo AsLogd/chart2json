@@ -62,15 +62,15 @@ export type SongSection = {
 	name?: 			string
 	artist?: 		string
 	album?:			string
-	year?: 			string
 	charter?: 		string
-	offset?: 		string
 	player2?: 		string
-	difficulty?: 	string
-	previewStart?: 	string
-	previewEnd?: 	string
 	genre?: 		string
 	mediaType?:		string
+	year?: 			number
+	offset?: 		number
+	difficulty?: 	number
+	previewStart?: 	number
+	previewEnd?: 	number
 }
 
 export enum AudioStream {
@@ -310,12 +310,10 @@ function songFromParsedSection(ps: Meta.ParsedSection): SongSection {
 	}
 	for (const item of ps.content) {
 		const key = item.key as string
-		if(key === Meta.SongKey.RESOLUTION) {
-			song.resolution = parseInt(item.values[0].value)
-		} else if(key.includes("Stream")) {
+		if(key.includes("Stream")) {
 			song.audioStreams[key as AudioStream] = Util.extractQuotes(item.values[0].value)
 		} else {
-			setSongValue(song, key, Util.extractQuotes(item.values[0].value))
+			setSongValue(song, key, item.values[0].value)
 		}
 	}
 
@@ -325,40 +323,46 @@ function songFromParsedSection(ps: Meta.ParsedSection): SongSection {
 function setSongValue(song: SongSection, key: string, value: string) {
 	switch(key) {
 		case Meta.SongKey.NAME:
-			song.name = value
+			song.name = Util.extractQuotes(value)
 			return
 		case Meta.SongKey.ARTIST:
-			song.artist = value
+			song.artist = Util.extractQuotes(value)
 			return
 		case Meta.SongKey.ALBUM:
-			song.album = value
-			return
-		case Meta.SongKey.YEAR:
-			song.year = value
+			song.album = Util.extractQuotes(value)
 			return
 		case Meta.SongKey.CHARTER:
-			song.charter = value
-			return
-		case Meta.SongKey.OFFSET:
-			song.offset = value
+			song.charter = Util.extractQuotes(value)
 			return
 		case Meta.SongKey.PLAYER2:
-			song.player2 = value
-			return
-		case Meta.SongKey.DIFFICULTY:
-			song.difficulty = value
-			return
-		case Meta.SongKey.PREVIEWSTART:
-			song.previewStart = value
-			return
-		case Meta.SongKey.PREVIEWEND:
-			song.previewEnd = value
+			song.player2 = Util.extractQuotes(value)
 			return
 		case Meta.SongKey.GENRE:
-			song.genre = value
+			song.genre = Util.extractQuotes(value)
 			return
 		case Meta.SongKey.MEDIATYPE:
-			song.mediaType = value
+			song.mediaType = Util.extractQuotes(value)
+			return
+		case Meta.SongKey.YEAR:
+			const year = parseInt(value.replace(/\D/g,''))
+			if (!isNaN(year)) {
+				song.year = year
+			}
+			return
+		case Meta.SongKey.RESOLUTION:
+			song.resolution = parseInt(value)
+			return
+		case Meta.SongKey.OFFSET:
+			song.offset = parseInt(value)
+			return
+		case Meta.SongKey.DIFFICULTY:
+			song.difficulty = parseInt(value)
+			return
+		case Meta.SongKey.PREVIEWSTART:
+			song.previewStart = parseInt(value)
+			return
+		case Meta.SongKey.PREVIEWEND:
+			song.previewEnd = parseInt(value)
 			return
 	}
 }
@@ -391,7 +395,7 @@ function syncTrackEventFromParsedItem(
 		case Meta.SyncTrackKey.BPM:
 			const event: Bpm = {
 				kind: SyncTrackEventType.BPM,
-				bpm: parseInt(pi.values[1].value)
+				bpm: parseInt(pi.values[1].value)/1000
 			}
 			const anchor = groupedTicks[tick].find(item =>
 				item.values[0].value === Meta.SyncTrackKey.ANCHOR
