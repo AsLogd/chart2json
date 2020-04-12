@@ -8,7 +8,7 @@ Terminal:
 chart2json -i *.chart -o output
 ```
 Script:
-```
+```javascript
 import Parser from "chart2json"
 const file = "... chart file contents ..."
 const result = Parser.parse(file)
