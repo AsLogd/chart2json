@@ -9,9 +9,9 @@
 }
 [Events]
 {
-	10 = E 100
+	10 = E "asdf"
 }
 [EasySingle]
 {
-	0 = N 0 0
+	0 = N 0
 }

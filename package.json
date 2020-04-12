@@ -50,6 +50,7 @@
   "dependencies": {
     "argparse": "^1.0.10",
     "glob": "^7.1.6",
+    "moo": "^0.5.1",
     "nearley": "^2.19.1"
   }
 }

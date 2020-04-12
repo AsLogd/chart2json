@@ -9,7 +9,7 @@ var ArgumentParser = require('argparse').ArgumentParser;
 var parser = new ArgumentParser({
   version: '0.0.1',
   addHelp:true,
-  description: "Example:\nchart2json -i folder/**/*.chart -o result/"
+  description: "Example:\nchart2json -i 'folder/**/*.chart' -o result/"
 });
 parser.addArgument(
   [ '-i', '--input' ],
@@ -80,7 +80,7 @@ files.forEach(filePath => {
 			break
 		case false:
 			Log.error(`	- ${filePath} - KO`)
-			Log.dump(result.reason.error)
+			Log.error(result.reason.error.reason)
 			break
 	}
 })

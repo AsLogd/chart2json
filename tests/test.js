@@ -95,7 +95,7 @@ Log.info("--executable--")
 		execSync(`rm -rf ${rawOutputFolder}`)
 	}
 	Log.info("Testing raw export:")
-	const command = `chart2json.js -r -i ${rawInputFolder}*.in -o ${rawOutputFolder} -p '    '`
+	const command = `chart2json.js -r -i '${rawInputFolder}*.in' -o ${rawOutputFolder} -p '    '`
 	Log.info(`Executing "${command}"...`, )
 	Log.info( execSync(`./bin/${command}`).toString() )
 	Log.info("Results:")
@@ -123,7 +123,7 @@ Log.info("--executable--")
 		execSync(`rm -rf ${outputFolder}`)
 	}
 	Log.info("Testing export:")
-	const command = `chart2json.js -i ${inputFolder}*.in -o ${outputFolder} -p '    '`
+	const command = `chart2json.js -i '${inputFolder}*.in' -o ${outputFolder} -p '    '`
 	Log.info(`Executing "${command}"...`, )
 	Log.info( execSync(`./bin/${command}`).toString() )
 	Log.info("Results:")

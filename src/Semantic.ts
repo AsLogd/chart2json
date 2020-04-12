@@ -80,6 +80,7 @@ function checkChart(secs: Meta.ParsedSection[]): null | ErrorObject {
 			const currentTrackSection = getOptionalSection(secs, name)
 			if (!currentTrackSection)
 				continue
+
 			const currentTrackSectionError = checkEventTypes(
 				name,
 				Meta.TrackTypes,
@@ -266,13 +267,13 @@ function checkEventTypes(section: string, types: Meta.EventsSectionType[], conte
 	for (const type of types) {
 		const [ eventKey, expectedType, isRequired ] = type
 		const relevantItems = content.filter(item =>
-			item.values[0].value === type[0]
+			item.values[0].value === eventKey
 		)
 		if (isRequired && relevantItems.length === 0) {
 			return {
 				reason: getErrorString(ErrorType.MISSING_REQUIRED_EVENT, {
 					section: section,
-					eventKey: type[0]
+					eventKey
 				})
 			}
 		}
@@ -334,7 +335,7 @@ function isValidLiteral(values: Meta.ParsedAtom[], definition: Meta.LiteralType)
 }
 
 function isValidTuple(values: Meta.ParsedAtom[], definition: Meta.TupleType): boolean {
-	return 	values.length > 0
+	return 	values.length === definition.types.length
 		&&	values.every((value, idx) =>
 			isValidType([value], definition.types[idx])
 		)
