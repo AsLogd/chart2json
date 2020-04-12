@@ -1,9 +1,9 @@
 export declare type Success<T> = {
-    tag: "success";
+    ok: true;
     value: T;
 };
 export declare type Failure<E> = {
-    tag: "failure";
+    ok: false;
     reason: E;
 };
 export declare function Success<T>(value: T): Success<T>;
