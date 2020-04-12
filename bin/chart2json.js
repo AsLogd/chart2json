@@ -67,8 +67,8 @@ files.forEach(filePath => {
 	const check = !args.skip
 	const result = parser(content, check)
 	const baseName = path.basename(filePath, path.extname(filePath))
-	switch(result.tag) {
-		case "success":
+	switch(result.ok) {
+		case true:
 			fs.mkdirSync(args.output, {recursive: true})
 			const outputPath = path.join(args.output, `${baseName}.json`)
 			const output = args.prettify
@@ -78,7 +78,7 @@ files.forEach(filePath => {
 			Log.ok(`	- ${filePath} - OK`)
 			parsed += 1
 			break
-		case "failure":
+		case false:
 			Log.error(`	- ${filePath} - KO`)
 			Log.dump(result.reason.error)
 			break
