@@ -3,7 +3,7 @@
 Parse the custom guitar hero songs .chart format as .json.  
 ## Usage
 ```
-usage: chart2json.js [-h] [-v] -i INPUT [-o OUTPUT] [-r] [-s] [-p PRETTIFY]
+usage: chart2json [-h] [-v] -i INPUT [-o OUTPUT] [-r] [-s] [-p PRETTIFY]
 
 Example: chart2json -i 'folder/**/*.chart' -o result/
 
