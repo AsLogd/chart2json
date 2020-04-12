@@ -1,6 +1,6 @@
 {
   "name": "chart2json",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": ".chart => .json",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -48,8 +48,8 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "argparse": "^1.0.10",
     "glob": "^7.1.6",
-    "nearley": "^2.19.1",
-    "argparse": "^1.0.10"
+    "nearley": "^2.19.1"
   }
 }
