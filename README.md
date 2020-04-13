@@ -154,7 +154,7 @@ yarn test
 ```
 The tests run in two stages:
  * First, the defined grammar and semantics are checked using the files found in the folders `tests/valid` (should be accepted by grammar an semantics) and `tests/invalid` (should error).
- * Then, the binary is tested by generating jsons from `tests/parse` and `tests/parseRaw` and checking against an expected output.
+ * Then, the binary is tested by generating jsons using both modes (normal and raw) and checking the results against an expected output.
 
 ## Built With
 
