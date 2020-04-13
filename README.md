@@ -23,10 +23,24 @@ Optional arguments:
                         prettifycation is performed
 
 ```
+## Installing
+
+For terminal usage:
+```
+npm install -g chart2json
+```
+
+To use it in a project:
+```
+npm install chart2json
+-or-
+yarn add chart2json
+```
+
 ## Examples
 Terminal:
 ```
-chart2json -i *.chart -o output
+chart2json -i '*.chart' -o output
 ```
 Script:
 ```javascript
@@ -44,38 +58,35 @@ Input .chart:
 ```
 [Song]
 {
-  Name = "Song name"
-  Artist = "Artist"
-  Year = ", 2016"
   Resolution = 192
-  Player2 = bass
-  Genre = "Rock"
-  MediaType = "cd"
-  MusicStream = "song.ogg"
 }
 [SyncTrack]
 {
   0 = TS 4
-  0 = B 100000
-  1536 = B 120000
-  1536 = A 123456
+  0 = B 120000
+  3072 = B 83000
+  9984=TS 2
+  9984 = B 186000
+  10368 = TS 4
 }
 [Events]
 {
-  0 = E "section intro"
-  30000 = E "section chorus"
-  40000 = E "section solo"
+  768 = E "section Intro"
+  1152 = E "phrase_start"
+  1200 = E "lyric lyric"
+  1320 = E "phrase_end"
 }
 [ExpertSingle]
 {
-  1000 = N 1 1000
-  1500 = S 2 3000
-  1500 = N 2 0
-  1500 = N 3 0
-  1800 = N 3 0
-  1800 = N 5 0
-  2000 = N 4 0
-  2000 = N 6 0
+  3744 = N 2 0
+  3744 = N 6 0
+  3792 = N 1 0
+  3792 = N 2 0
+  3792 = N 6 0
+  3840 = N 7 0
+  3840 = N 5 0
+  3936 = N 7 0
+  4032 = N 7 0
 }
 ```
 Output .json:
@@ -84,18 +95,14 @@ Output .json:
     "song":
     {
         "resolution": 192,
-        "audioStreams": {"MusicStream":"song.ogg"},
-        "name": "Song name",
-        "artist": "Artist",
-        "year": 2016,
-        "player2": "bass",
-        "genre": "Rock",
-        "mediaType": "cd"
+        "audioStreams": {}
     },
     "syncTrack":
     {
-        "0": {"events":[{"kind":1,"signature":{"numerator":4,"denominator":4}},{"kind":0,"bpm":100}]},
-        "1536": {"events":[{"kind":0,"bpm":120,"anchorMicroSeconds":123456}]}
+        "0": [{"kind":1,"signature":{"numerator":4,"denominator":4}},{"kind":0,"bpm":120}],
+        "3072": [{"kind":0,"bpm":83}],
+        "9984": [{"kind":1,"signature":{"numerator":2,"denominator":4}},{"kind":0,"bpm":186}],
+        "10368": [{"kind":1,"signature":{"numerator":4,"denominator":4}}]
     },
     "difficulties":
     {
@@ -103,18 +110,70 @@ Output .json:
         {
             "Single":
             {
-                "1000": {"events":[{"lanes":[{"lane":2,"sustain":1000}],"forced":false,"tap":false}]},
-                "1500": {"events":[{"lanes":[{"lane":3,"sustain":0},{"lane":4,"sustain":0}],"forced":false,"tap":false},{"type":2,"duration":3000}]},
-                "1800": {"events":[{"lanes":[{"lane":4,"sustain":0}],"forced":true,"tap":false}]},
-                "2000": {"events":[{"lanes":[{"lane":5,"sustain":0}],"forced":false,"tap":true}]}
+                "3744":
+                [
+                    {
+                        "lanes":
+                        [
+                            {"lane":3,"sustain":0}
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "3792":
+                [
+                    {
+                        "lanes":
+                        [
+                            {"lane":2,"sustain":0},
+                            {"lane":3,"sustain":0}
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "3840":
+                [
+                    {
+                        "lanes":
+                        [
+                            {"lane":0,"sustain":0}
+                        ],
+                        "forced": true,
+                        "tap": false
+                    }
+                ],
+                "3936":
+                [
+                    {
+                        "lanes":
+                        [
+                            {"lane":0,"sustain":0}
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "4032":
+                [
+                    {
+                        "lanes":
+                        [
+                            {"lane":0,"sustain":0}
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ]
             }
-        }
-    },
+        },
     "events":
     {
-        "0": {"events":[{"kind":0,"name":"intro"}]},
-        "30000": {"events":[{"kind":0,"name":"chorus"}]},
-        "40000": {"events":[{"kind":0,"name":"solo"}]}
+        "768": [{"kind":0,"name":"Intro"}],
+        "1152": [{"kind":1}],
+        "1200": [{"kind":2,"lyric":"lyric"}],
+        "1320": [{"kind":3}]
     }
 }
 ```
@@ -131,19 +190,6 @@ Unexpected type found at line { 16 } (section: EasySingle key: 0)
         Number 
 ```
 To avoid the semantic check, use the `--raw` and `--skip` options, which generates a much more basic json by only parsing the basic `.chart` syntax.
-## Installing
-
-For terminal usage:
-```
-npm install -g chart2json
-```
-
-To use it in a project:
-```
-npm install chart2json
--or-
-yarn add chart2json
-```
 
 ## Running the tests
 
