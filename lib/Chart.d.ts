@@ -48,9 +48,7 @@ export declare enum AudioStream {
     KEYSSTREAM = "KeysStream",
     CROWDSTREAM = "CrowdStream"
 }
-export interface Tick<T> {
-    events: T[];
-}
+export declare type Tick<T> = T[];
 export interface SyncTrackSection {
     [tick: number]: Tick<SyncTrackEvent>;
 }

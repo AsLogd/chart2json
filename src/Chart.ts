@@ -87,9 +87,7 @@ export enum AudioStream {
 	CROWDSTREAM	 = "CrowdStream",
 }
 
-export interface Tick<T>{
-	events: T[]
-}
+export type Tick<T> = T[]
 
 export interface SyncTrackSection {
 	[tick: number]: Tick<SyncTrackEvent>
@@ -267,9 +265,7 @@ function eventsFromParsedSection(ps: Meta.ParsedSection): EventsSection {
 	for (const tick of ticks) {
 		// Unnecessary
 		const t = parseInt(tick)
-		section[t] = {
-			events: groupedTicks[t].map(item => eventFromParsedItem(item))
-		}
+		section[t] = groupedTicks[t].map(item => eventFromParsedItem(item))
 	}
 
 	return section
@@ -374,14 +370,12 @@ function syncTrackFromParsedSection(ps: Meta.ParsedSection): SyncTrackSection {
 	for (const tick of ticks) {
 		// Unnecessary
 		const t = parseInt(tick)
-		syncTrack[t] = {
-			events: groupedTicks[t].filter(item =>
-				item.values[0].value === Meta.SyncTrackKey.BPM
-			 ||	item.values[0].value === Meta.SyncTrackKey.TIME_SIGNATURE
-			).map(item =>
-				syncTrackEventFromParsedItem(item, tick, groupedTicks)
-			)
-		}
+		syncTrack[t] = groupedTicks[t].filter(item =>
+			item.values[0].value === Meta.SyncTrackKey.BPM
+		 ||	item.values[0].value === Meta.SyncTrackKey.TIME_SIGNATURE
+		).map(item =>
+			syncTrackEventFromParsedItem(item, tick, groupedTicks)
+		)
 	}
 	return syncTrack
 }
@@ -468,9 +462,7 @@ function guitarTrackFromParsedItems(items: Meta.ParsedItem[]): Track< StringNote
 	for (const tick of ticks) {
 		// Unnecessary
 		const t = parseInt(tick)
-		guitarTrack[t] = {
-			events: guitarEventsFromParsedItems(groupedTicks[t])
-		}
+		guitarTrack[t] = guitarEventsFromParsedItems(groupedTicks[t])
 	}
 	return guitarTrack
 }
@@ -538,9 +530,7 @@ function drumsTrackFromParsedItems(items: Meta.ParsedItem[]): Track< DrumsNote >
 	for (const tick of ticks) {
 		// Unnecessary
 		const t = parseInt(tick)
-		drumsTrack[t] = {
-			events: drumsEventsFromParsedItems(groupedTicks[t])
-		}
+		drumsTrack[t] = drumsEventsFromParsedItems(groupedTicks[t])
 	}
 	return drumsTrack
 }
@@ -600,9 +590,7 @@ function ghlTrackFromParsedItems(items: Meta.ParsedItem[]): Track< StringNote<GH
 	for (const tick of ticks) {
 		// Unnecessary
 		const t = parseInt(tick)
-		ghlTrack[t] = {
-			events: ghlEventsFromParsedItems(groupedTicks[t])
-		}
+		ghlTrack[t] = ghlEventsFromParsedItems(groupedTicks[t])
 	}
 	return ghlTrack
 }
