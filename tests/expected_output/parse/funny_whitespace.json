@@ -1,0 +1,184 @@
+{
+    "song": {
+        "resolution": 192,
+        "audioStreams": {}
+    },
+    "syncTrack": {
+        "0": [
+            {
+                "kind": 1,
+                "signature": {
+                    "numerator": 4,
+                    "denominator": 4
+                }
+            },
+            {
+                "kind": 0,
+                "bpm": 120
+            }
+        ],
+        "3072": [
+            {
+                "kind": 0,
+                "bpm": 83
+            }
+        ],
+        "3552": [
+            {
+                "kind": 0,
+                "bpm": 89
+            }
+        ],
+        "3840": [
+            {
+                "kind": 0,
+                "bpm": 188
+            }
+        ],
+        "9984": [
+            {
+                "kind": 1,
+                "signature": {
+                    "numerator": 2,
+                    "denominator": 4
+                }
+            },
+            {
+                "kind": 0,
+                "bpm": 186
+            }
+        ],
+        "10368": [
+            {
+                "kind": 1,
+                "signature": {
+                    "numerator": 4,
+                    "denominator": 4
+                }
+            }
+        ]
+    },
+    "difficulties": {
+        "Expert": {
+            "Single": {
+                "3744": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "3792": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "3840": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": true,
+                        "tap": false
+                    }
+                ],
+                "3936": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "4032": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ]
+            }
+        }
+    },
+    "events": {
+        "768": [
+            {
+                "kind": 0,
+                "name": "Intro"
+            }
+        ],
+        "1152": [
+            {
+                "kind": 1
+            }
+        ],
+        "1200": [
+            {
+                "kind": 2,
+                "lyric": "8"
+            }
+        ],
+        "1320": [
+            {
+                "kind": 3
+            }
+        ],
+        "1344": [
+            {
+                "kind": 1
+            }
+        ],
+        "1392": [
+            {
+                "kind": 2,
+                "lyric": "7"
+            }
+        ],
+        "1536": [
+            {
+                "kind": 3
+            }
+        ],
+        "1584": [
+            {
+                "kind": 1
+            }
+        ],
+        "1608": [
+            {
+                "kind": 2,
+                "lyric": "6-"
+            }
+        ],
+        "1920": [
+            {
+                "kind": 2,
+                "lyric": "6-"
+            }
+        ]
+    }
+}

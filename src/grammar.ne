@@ -12,7 +12,10 @@ let lexer = moo.compile({
 	'[': 		'[',
 	']': 		']',
 	'=': 		'=',
+	// match BOM or any other thing that we may find
+	bom: 	{match: /[^\[]+/, lineBreaks: true}
 })
+
 const getSection 	= ([title, _, content]) => ({title: title.value, content})
 const removeFirst   = ([_, a]) 				=> a
 const getItem 		= ([_, key, __, values])=> ({key: key.value, values})
@@ -22,14 +25,14 @@ const empty 		= ()					=> null
 
 @lexer lexer
 
-chart 		-> section:+ 			 		{% id %}
-section 	-> title %nl content %nl 		{% getSection %}
+chart 		-> %bom:? section:+	 			{% removeFirst %}
+section 	-> title %nl content %nl:? 		{% getSection %}
 title		-> "[" %literal "]"				{% removeFirst %}
 content 	-> ("{" %nl) item_list "}"		{% removeFirst %}
 item_list	-> item:+						{% id %}
 item		-> __ key eq value item_end 	{% getItem %}
 item_end 	-> _ %nl 						{% empty %}
-eq 			-> __ "=" __ 					{% empty %}
+eq 			-> _ "=" _ 						{% empty %}
 value		-> atom value_rest:*			{% catWithRest %}
 value_rest	-> __ atom 						{% removeFirst %}
 

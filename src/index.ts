@@ -32,6 +32,8 @@ function executeParser(text: string): Failable<Meta.ParsedChart, ParseError> {
 
 	if (parser.results.length < 1) {
 		return Failure({error: "Invalid Chart file"})
+	} else if(parser.results.length > 1) {
+		console.warn("chart2json: Ambiguous input")
 	}
 
 	return Success(parser.results[0])

@@ -1,0 +1,53 @@
+{
+    "song": {
+        "resolution": 192,
+        "audioStreams": {}
+    },
+    "syncTrack": {
+        "0": [
+            {
+                "kind": 0,
+                "bpm": 0.12
+            },
+            {
+                "kind": 1,
+                "signature": {
+                    "numerator": 4,
+                    "denominator": 4
+                }
+            }
+        ]
+    },
+    "difficulties": {
+        "Easy": {
+            "Single": {
+                "0": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ]
+            }
+        }
+    },
+    "events": {
+        "10": [
+            {
+                "kind": 4,
+                "value": "Beginning"
+            }
+        ],
+        "20": [
+            {
+                "kind": 4,
+                "value": "End"
+            }
+        ]
+    }
+}

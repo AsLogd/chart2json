@@ -1,0 +1,1984 @@
+{
+    "song": {
+        "resolution": 192,
+        "audioStreams": {
+            "MusicStream": "song.ogg"
+        },
+        "name": "At Doom's Gate",
+        "artist": "Mick Gordon",
+        "charter": "Shankocity",
+        "year": 2016,
+        "offset": 0,
+        "player2": "bass",
+        "difficulty": 6,
+        "previewStart": 0,
+        "previewEnd": 0,
+        "genre": "Hell",
+        "mediaType": "cd"
+    },
+    "syncTrack": {
+        "0": [
+            {
+                "kind": 1,
+                "signature": {
+                    "numerator": 4,
+                    "denominator": 4
+                }
+            },
+            {
+                "kind": 0,
+                "bpm": 146
+            }
+        ],
+        "768": [
+            {
+                "kind": 0,
+                "bpm": 148
+            }
+        ],
+        "1536": [
+            {
+                "kind": 0,
+                "bpm": 161
+            }
+        ]
+    },
+    "difficulties": {
+        "Expert": {
+            "Single": {
+                "1536": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 2688
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    },
+                    {
+                        "type": 2,
+                        "duration": 3168
+                    }
+                ],
+                "4608": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 3072
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "8832": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "8928": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9024": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9120": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9216": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9264": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9312": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9360": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "9408": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 1248
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "10752": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 720
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "11520": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "11616": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "11712": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "11808": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "11904": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "12000": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "12096": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "12192": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "12288": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 1488
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "13824": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "13920": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "14400": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "14496": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "14592": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "14688": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "14784": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "14880": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "14976": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 1296
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "16320": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "16368": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "16416": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "16464": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 384
+                            }
+                        ],
+                        "forced": false,
+                        "tap": true
+                    }
+                ],
+                "16896": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "16992": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "17472": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "17568": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "18432": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    },
+                    {
+                        "type": 2,
+                        "duration": 1632
+                    }
+                ],
+                "18528": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "18624": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "18720": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "18816": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "18912": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19008": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19104": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19200": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19296": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19392": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19488": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19584": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19680": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19776": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19872": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "19968": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20064": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20160": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20256": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20352": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20448": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20544": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20640": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20736": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20832": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "20928": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21024": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21120": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21216": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21312": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21408": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21504": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21600": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21696": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21792": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21888": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "21984": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22080": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22176": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22272": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22368": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22464": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 1,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22560": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22656": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22752": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22848": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "22944": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "23040": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "23136": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "23424": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "23616": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "23712": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "23904": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "24000": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "24192": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "24288": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "24576": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "24672": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "24960": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "25152": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "25248": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "25440": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "25536": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "25728": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 384
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    },
+                    {
+                        "type": 2,
+                        "duration": 1776
+                    }
+                ],
+                "26112": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "26208": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "26400": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "26496": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "26688": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "26784": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "26976": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "27072": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "27264": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "27360": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "27648": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "27744": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28032": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28224": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28320": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28512": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28608": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28800": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "28896": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "29184": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    },
+                    {
+                        "type": 2,
+                        "duration": 1488
+                    }
+                ],
+                "29280": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "29568": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "29760": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "29856": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "30048": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "30144": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "30336": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "30432": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "30720": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "30816": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31008": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31104": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 4,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31296": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31392": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31584": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31680": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "31872": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 2,
+                                "sustain": 384
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "32256": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "32352": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "32544": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "32640": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 5,
+                                "sustain": 192
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "32832": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "32928": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "33120": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "33216": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 144
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "33408": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 3,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "33504": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 240
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "33792": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "33888": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "34080": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "34176": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "34368": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "34464": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "34656": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ],
+                "34752": [
+                    {
+                        "lanes": [
+                            {
+                                "lane": 0,
+                                "sustain": 0
+                            }
+                        ],
+                        "forced": false,
+                        "tap": false
+                    }
+                ]
+            }
+        }
+    },
+    "events": {
+        "1536": [
+            {
+                "kind": 0,
+                "name": "6"
+            }
+        ],
+        "13824": [
+            {
+                "kind": 0,
+                "name": "6"
+            }
+        ],
+        "23040": [
+            {
+                "kind": 0,
+                "name": "6"
+            }
+        ]
+    }
+}

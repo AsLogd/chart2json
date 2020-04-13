@@ -10,13 +10,45 @@ const spawn = require('child_process').spawn;
 
 const validFolder = path.join(__dirname, './valid/')
 const invalidFolder = path.join(__dirname, './invalid/')
-const rawInputFolder = path.join(__dirname, './parseRaw/')
-const rawOutputFolder = path.join(__dirname, './output/parseRaw/')
-const inputFolder = path.join(__dirname, './parse/')
-const outputFolder = path.join(__dirname, './output/parse/')
+const outputFolder =  path.join(__dirname, './output/')
+const expectedOutputFolder =  path.join(__dirname, './expected_output/')
+const parserawSubFolder = "parseRaw/"
+const parseSubFolder = "parse/"
 function dumpTest(path, results) {
 	Log.info("Results for ("+path+"):")
 	Log.dump(results)
+}
+
+function testExport(subfolder, raw) {
+	const inputFiles = path.join(validFolder, "*.chart")
+	const outputSubFolder = path.join(outputFolder, subfolder)
+	const expectedOutputSubFolder = path.join(expectedOutputFolder, subfolder)
+	const rawParam = raw ? "-r" : ""
+	const command = `chart2json.js ${rawParam} -i '${inputFiles}' -o ${outputSubFolder} -p '    '`
+	Log.info(`==> Executing "${command}"...`, )
+	Log.info( execSync(`./bin/${command}`).toString() )
+	Log.info("==> Checking results:")
+	fs.readdirSync(expectedOutputSubFolder).forEach(file => {
+		const fileName = path.basename(file)
+		const fileNameNoExt = path.basename(file, path.extname(file))
+
+		const expectedOutputFile = path.join(expectedOutputSubFolder, fileName)
+		const actualOutputFile = path.join(outputSubFolder, `${fileNameNoExt}.json`)
+
+		const expectedOutput = fs.readFileSync(expectedOutputFile, 'utf8');
+		const actualOutput = fs.readFileSync(actualOutputFile, 'utf8');
+
+		if (expectedOutput !== actualOutput) {
+			Log.error(`\t- ${fileNameNoExt} - KO:`)
+			spawn("diff", [
+				expectedOutputFile,
+				actualOutputFile
+			], { stdio: 'inherit' })
+			return
+		} else {
+			Log.ok(`\t- ${fileName} - OK`)
+		}
+	})
 }
 
 Log.info("========================")
@@ -25,9 +57,9 @@ Log.info("--grammar and semantic--")
 Log.info("Testing valid inputs:")
 fs.readdirSync(validFolder).forEach(file => {
 	const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
-	const testName = file.split(".").slice(0, -1).join(".")
-	const path =validFolder+file
-	const data = fs.readFileSync(path, 'utf8');
+	const testName = path.basename(file, path.extname(file))
+	const validFilePath = path.join(validFolder, file)
+	const data = fs.readFileSync(validFilePath, 'utf8');
 	try {
 		parser.feed(data);
 	} catch (err) {
@@ -38,12 +70,12 @@ fs.readdirSync(validFolder).forEach(file => {
 	}
 	if (parser.results.length > 1) {
 		Log.warn(" - "+testName+" - Ambiguous!")
-		dumpTest(path, parser.results)
+		dumpTest(validFilePath, parser.results)
 		return
 	}
 	if (parser.results.length === 0) {
 		Log.error(" - "+testName+" - KO (No matching)")
-		dumpTest(path, parser.results)
+		dumpTest(validFilePath, parser.results)
 		return
 	}
 
@@ -62,9 +94,9 @@ fs.readdirSync(validFolder).forEach(file => {
 Log.info("Testing invalid inputs:")
 fs.readdirSync(invalidFolder).forEach(file => {
 	const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
-	const testName = file.split(".").slice(0, -1).join(".")
-	const path =invalidFolder+file
-	const data = fs.readFileSync(path, 'utf8');
+	const testName = path.basename(file, path.extname(file))
+	const invalidPathFile = path.join(invalidFolder, file)
+	const data = fs.readFileSync(invalidPathFile, 'utf8');
 	try {
 		parser.feed(data);
 	} catch (err) {
@@ -84,65 +116,16 @@ fs.readdirSync(invalidFolder).forEach(file => {
 	}
 
 	Log.error(" - "+testName+" - KO")
-	dumpTest(path, parser.results)
+	dumpTest(invalidPathFile, parser.results)
 });
 
 Log.info("==============")
 Log.info("--executable--")
-{
-	if (fs.existsSync(rawOutputFolder)) {
-		Log.info(`Removing existing output folder "${rawOutputFolder}"...`)
-		execSync(`rm -rf ${rawOutputFolder}`)
-	}
-	Log.info("Testing raw export:")
-	const command = `chart2json.js -r -i '${rawInputFolder}*.in' -o ${rawOutputFolder} -p '    '`
-	Log.info(`Executing "${command}"...`, )
-	Log.info( execSync(`./bin/${command}`).toString() )
-	Log.info("Results:")
-	const rawOutFiles = glob.sync(`${rawInputFolder}*.out`)
-	for (const file of rawOutFiles) {
-		const fileNamePath = file.split(".").slice(0, -1).join(".")
-		const fileName = fileNamePath.split("/").pop()
-		const expectedOutput = fs.readFileSync(`${fileNamePath}.out`, 'utf8');
-		const actualOutput = fs.readFileSync(`${rawOutputFolder}${fileName}.json`, 'utf8');
-		if (expectedOutput !== actualOutput) {
-			Log.error(`\t- ${fileName} - KO:`)
-			spawn("diff", [
-				`${fileNamePath}.out`,
-				`${rawOutputFolder}${fileName}.json`
-			], { stdio: 'inherit' })
-			break
-		} else {
-			Log.ok(`\t- ${fileName} - OK`)
-		}
-	}
+if (fs.existsSync(outputFolder)) {
+	Log.info(`Removing existing output folder "${outputFolder}"...`)
+	execSync(`rm -rf ${outputFolder}`)
 }
-{
-	if (fs.existsSync(outputFolder)) {
-		Log.info(`Removing existing output folder "${outputFolder}"...`)
-		execSync(`rm -rf ${outputFolder}`)
-	}
-	Log.info("Testing export:")
-	const command = `chart2json.js -i '${inputFolder}*.in' -o ${outputFolder} -p '    '`
-	Log.info(`Executing "${command}"...`, )
-	Log.info( execSync(`./bin/${command}`).toString() )
-	Log.info("Results:")
-	const outFiles = glob.sync(`${inputFolder}*.out`)
-	for (const file of outFiles) {
-		const fileNamePath = file.split(".").slice(0, -1).join(".")
-		const fileName = fileNamePath.split("/").pop()
-		const expectedOutput = fs.readFileSync(`${fileNamePath}.out`, 'utf8');
-		const actualOutput = fs.readFileSync(`${outputFolder}${fileName}.json`, 'utf8');
-		if (expectedOutput !== actualOutput) {
-			Log.error(`\t- ${fileName} - KO:`)
-			spawn("diff", [
-				`${fileNamePath}.out`,
-				`${outputFolder}${fileName}.json`
-			], { stdio: 'inherit' })
-			break
-		} else {
-			Log.ok(`\t- ${fileName} - OK`)
-		}
-	}
-
-}
+Log.info("Testing raw export:")
+testExport(parserawSubFolder, true)
+Log.info("Testing export:")
+testExport(parseSubFolder, false)
