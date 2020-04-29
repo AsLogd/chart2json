@@ -1,6 +1,5 @@
 import * as Meta from "./Meta";
-export declare type Difficulty = Meta.Difficulty;
-export declare type Instrument = Meta.Instrument;
+export { Difficulty, Instrument } from "./Meta";
 export declare type GuitarInstrument = Meta.Instrument.SINGLE | Meta.Instrument.DOUBLEGUITAR | Meta.Instrument.DOUBLEBASS | Meta.Instrument.DOUBLERHYTHM | Meta.Instrument.KEYBOARD;
 export declare function isGuitar(instrument: Meta.Instrument): instrument is GuitarInstrument;
 export declare type DrumsInstrument = Meta.Instrument.DRUMS;
@@ -14,7 +13,7 @@ export interface Chart {
     difficulties: Difficulties;
 }
 export declare type Difficulties = {
-    [difficulty in Difficulty]?: InstrumentTracks;
+    [difficulty in Meta.Difficulty]?: InstrumentTracks;
 };
 export declare type AudioStreams = {
     [stream in AudioStream]?: string;

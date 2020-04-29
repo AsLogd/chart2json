@@ -1,8 +1,7 @@
 import * as Util from "./Util"
 import * as Meta from "./Meta"
 
-export type Difficulty = Meta.Difficulty
-export type Instrument = Meta.Instrument
+export  {Difficulty, Instrument} from "./Meta"
 
 export type GuitarInstrument =
 	| Meta.Instrument.SINGLE
@@ -49,7 +48,7 @@ export interface Chart {
 }
 
 export type Difficulties = {
-	[difficulty in Difficulty]?: InstrumentTracks
+	[difficulty in Meta.Difficulty]?: InstrumentTracks
 }
 
 export type AudioStreams = {
